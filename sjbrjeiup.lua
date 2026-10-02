@@ -1,5 +1,5 @@
 -- ==========================================
--- LYNN MOD MENU - DARK VOID (SILVER VIP EDITION)
+-- LYNN MOD MENU - DARK VOID (VIP TELEKINESIS ADDED)
 -- ==========================================
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
@@ -521,7 +521,7 @@ local function BukaMenuUtamaUltimate()
 		return btn, switchBg, knob, inputBox
 	end
 
-	-- TAB 1: VIP (FAST TAP, BOT REPLAY, & SERVER SCAN DENGAN ANIMASI SILVER BERKILAU)
+	-- TAB 1: VIP (FAST TAP, BOT REPLAY, & SERVER SCAN)
 	local databaseVip = {
 		["Lyosh71"] = true,
 		["gantung300"] = true,
@@ -531,57 +531,36 @@ local function BukaMenuUtamaUltimate()
 		local vipCard = Instance.new("Frame", pageVip)
 		vipCard.Size = UDim2.new(1, -20, 0, 75)
 		vipCard.Position = UDim2.new(0, 10, 0, 12)
-		vipCard.BackgroundColor3 = Color3.fromRGB(10, 10, 13)
+		vipCard.BackgroundColor3 = Color3.fromRGB(11, 11, 15)
 		Instance.new("UICorner", vipCard).CornerRadius = UDim.new(0, 8)
 		
 		local cardStroke = Instance.new("UIStroke", vipCard)
-		cardStroke.Color = Color3.fromRGB(120, 130, 145)
-		cardStroke.Thickness = 1.5
+		cardStroke.Color = Color3.fromRGB(45, 45, 60)
+		cardStroke.Thickness = 1.2
 
 		local vipAccent = Instance.new("Frame", vipCard)
-		vipAccent.Size = UDim2.new(0, 4, 1, -16)
+		vipAccent.Size = UDim2.new(0, 3, 1, -16)
 		vipAccent.Position = UDim2.new(0, 8, 0, 8)
-		vipAccent.BackgroundColor3 = Color3.fromRGB(200, 210, 225)
+		vipAccent.BackgroundColor3 = Color3.fromRGB(230, 230, 240)
 		vipAccent.BorderSizePixel = 0
 		Instance.new("UICorner", vipAccent).CornerRadius = UDim.new(1, 0)
 
-		-- Looping Animasi Silver Berkilau untuk Card VIP
-		task.spawn(function()
-			while vipCard.Parent do
-				TweenService:Create(cardStroke, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-					Color = Color3.fromRGB(225, 235, 255)
-				}):Play()
-				TweenService:Create(vipAccent, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-					BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-				}):Play()
-				task.wait(0.9)
-				
-				TweenService:Create(cardStroke, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-					Color = Color3.fromRGB(90, 100, 115)
-				}):Play()
-				TweenService:Create(vipAccent, TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), {
-					BackgroundColor3 = Color3.fromRGB(140, 150, 170)
-				}):Play()
-				task.wait(0.9)
-			end
-		end)
-
 		local vipTitle = Instance.new("TextLabel", vipCard)
 		vipTitle.Size = UDim2.new(1, -25, 0, 22)
-		vipTitle.Position = UDim2.new(0, 24, 0, 10)
+		vipTitle.Position = UDim2.new(0, 20, 0, 10)
 		vipTitle.BackgroundTransparency = 1
-		vipTitle.Text = "⚡ SILVER VIP // SYSTEM OVERRIDE"
-		vipTitle.TextColor3 = Color3.fromRGB(235, 240, 250)
+		vipTitle.Text = "VIP // OPERATOR ACCESS"
+		vipTitle.TextColor3 = Color3.fromRGB(240, 240, 250)
 		vipTitle.Font = Enum.Font.GothamBold
 		vipTitle.TextSize = 11
 		vipTitle.TextXAlignment = Enum.TextXAlignment.Left
 
 		local vipDesc = Instance.new("TextLabel", vipCard)
 		vipDesc.Size = UDim2.new(1, -25, 0, 30)
-		vipDesc.Position = UDim2.new(0, 24, 0, 32)
+		vipDesc.Position = UDim2.new(0, 20, 0, 32)
 		vipDesc.BackgroundTransparency = 1
-		vipDesc.Text = "Operator: " .. player.Name .. " — Metallic Silver Core Active."
-		vipDesc.TextColor3 = Color3.fromRGB(150, 160, 175)
+		vipDesc.Text = "Verified Operator: " .. player.Name .. " — All systems primed."
+		vipDesc.TextColor3 = Color3.fromRGB(150, 150, 165)
 		vipDesc.Font = Enum.Font.Gotham
 		vipDesc.TextSize = 10
 		vipDesc.TextXAlignment = Enum.TextXAlignment.Left
@@ -781,6 +760,48 @@ local function BukaMenuUtamaUltimate()
 		local listLayout = Instance.new("UIListLayout", listScroll)
 		listLayout.SortOrder = Enum.SortOrder.LayoutOrder
 		listLayout.Padding = UDim.new(0, 4)
+
+		-- FITUR TELEKINESIS (VIP EXCLUSIVE)
+		local telekinesisRow = Instance.new("Frame", pageVip)
+		telekinesisRow.Size = UDim2.new(1, -20, 0, 35)
+		telekinesisRow.Position = UDim2.new(0, 10, 0, 515) -- Posisinya tepat di bawah list dropdown scan server
+		telekinesisRow.BackgroundTransparency = 1
+
+		local telekinesisBtn = Instance.new("TextButton", telekinesisRow)
+		telekinesisBtn.Size = UDim2.new(1, 0, 1, 0)
+		telekinesisBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
+		telekinesisBtn.TextColor3 = Color3.fromRGB(210, 210, 220)
+		telekinesisBtn.TextSize = 11
+		telekinesisBtn.Font = Enum.Font.GothamBold
+		telekinesisBtn.Text = "ACTIVATE TELEKINESIS (V2)"
+		Instance.new("UICorner", telekinesisBtn).CornerRadius = UDim.new(0, 6)
+		local teleBtnStroke = Instance.new("UIStroke", telekinesisBtn)
+		teleBtnStroke.Color = Color3.fromRGB(45, 45, 58)
+		teleBtnStroke.Thickness = 1.2
+
+		telekinesisBtn.MouseButton1Click:Connect(function()
+			pcall(function()
+				telekinesisBtn.Text = "LOADING SCRIPT..."
+				telekinesisBtn.TextColor3 = Color3.fromRGB(240, 205, 80)
+				TampilkanNotifikasiHijau("Loading Telekinesis dari link...")
+				
+				task.spawn(function()
+					local success = pcall(function()
+						loadstring(game:HttpGet("https://pastebin.com/raw/VVWcfs9t"))()
+					end)
+					
+					if success then
+						telekinesisBtn.Text = "TELEKINESIS ACTIVE"
+						telekinesisBtn.TextColor3 = Color3.fromRGB(80, 220, 120)
+						TampilkanNotifikasiHijau("Telekinesis V2 Berhasil Dieksekusi!")
+					else
+						telekinesisBtn.Text = "ACTIVATE TELEKINESIS (V2)"
+						telekinesisBtn.TextColor3 = Color3.fromRGB(210, 210, 220)
+						TampilkanNotifikasiHijau("Gagal! Link mati atau terblokir.")
+					end
+				end)
+			end)
+		end)
 
 		local function AddServerOption(text, jobId)
 			local optBtn = Instance.new("TextButton", listScroll)
