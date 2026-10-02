@@ -1,5 +1,5 @@
 -- ==========================================
--- LYNN MOD MENU - DARK VOID (ULTIMATE FINAL)
+-- LYNN MOD MENU - DARK VOID (ULTIMATE FINAL + FIXED COLOR)
 -- ==========================================
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
@@ -11,6 +11,7 @@ local VirtualUser = game:GetService("VirtualUser")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local TeleportService = game:GetService("TeleportService")
 local HttpService = game:GetService("HttpService")
+local PlaceId = game.PlaceId
 
 local targetParent = nil
 pcall(function()
@@ -375,7 +376,7 @@ local function BukaMenuUtamaUltimate()
 		return btn
 	end
 
-	-- TOMBOL TAB (TANPA EMOJI)
+	-- TOMBOL TAB
 	local btnTabVip    = BuatTombolTab(75, "VIP")
 	local btnTabPlayer = BuatTombolTab(103, "Player")
 	local btnTabVisual = BuatTombolTab(131, "Visuals")
@@ -425,7 +426,7 @@ local function BukaMenuUtamaUltimate()
 	pageVip.Position = UDim2.new(0, 130, 0, 45)
 	pageVip.BackgroundTransparency = 1
 	pageVip.Visible = false
-	pageVip.CanvasSize = UDim2.new(0, 0, 2.3, 0)
+	pageVip.CanvasSize = UDim2.new(0, 0, 3.2, 0)
 	pageVip.ScrollBarThickness = 3
 
 	local pagePlayer = Instance.new("ScrollingFrame", mainFrame)
@@ -520,7 +521,7 @@ local function BukaMenuUtamaUltimate()
 		return btn, switchBg, knob, inputBox
 	end
 
-	-- TAB 1: VIP (FAST TAP & BOT REPLAY)
+	-- TAB 1: VIP (FAST TAP, BOT REPLAY, & SERVER SCAN)
 	local databaseVip = {
 		["Lyosh71"] = true,
 		["gantung300"] = true,
@@ -719,6 +720,89 @@ local function BukaMenuUtamaUltimate()
 		btnImportReplay.TextSize = 10
 		Instance.new("UICorner", btnImportReplay).CornerRadius = UDim.new(0, 5)
 		Instance.new("UIStroke", btnImportReplay).Color = Color3.fromRGB(40, 40, 52)
+
+		-- FITUR TAMBAHAN: SCAN SERVER SEPI DI TAB VIP
+		local scanServerRow = Instance.new("Frame", pageVip)
+		scanServerRow.Size = UDim2.new(1, -20, 0, 40)
+		scanServerRow.Position = UDim2.new(0, 10, 0, 312)
+		scanServerRow.BackgroundTransparency = 1
+
+		local scanServerBtn = Instance.new("TextButton", scanServerRow)
+		scanServerBtn.Size = UDim2.new(1, 0, 1, 0)
+		scanServerBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
+		scanServerBtn.TextColor3 = Color3.fromRGB(210, 210, 220)
+		scanServerBtn.TextSize = 11
+		scanServerBtn.Font = Enum.Font.GothamBold
+		scanServerBtn.Text = "SCAN SERVER SEPI"
+		Instance.new("UICorner", scanServerBtn).CornerRadius = UDim.new(0, 6)
+		local scanBtnStroke = Instance.new("UIStroke", scanServerBtn)
+		scanBtnStroke.Color = Color3.fromRGB(45, 45, 58)
+		scanBtnStroke.Thickness = 1.2
+
+		-- Frame List Pilihan Server (Muncul di sebelah menu utama)
+		local listFrame = Instance.new("ScrollingFrame", mainFrame)
+		listFrame.Size = UDim2.new(0, 190, 0, 320)
+		listFrame.Position = UDim2.new(1, 10, 0, 0)
+		listFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 24)
+		listFrame.BorderSizePixel = 0
+		listFrame.Visible = false
+		listFrame.ScrollBarThickness = 4
+		Instance.new("UICorner", listFrame).CornerRadius = UDim.new(0, 8)
+
+		local listLayout = Instance.new("UIListLayout", listFrame)
+		listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+		listLayout.Padding = UDim.new(0, 4)
+
+		local function AddServerOption(text, jobId)
+			local optBtn = Instance.new("TextButton", listFrame)
+			optBtn.Size = UDim2.new(1, -8, 0, 32)
+			optBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 42) -- Warna gelap serasi, bersih tanpa merah
+			optBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
+			optBtn.TextSize = 12
+			optBtn.Font = Enum.Font.Gotham
+			optBtn.Text = text
+			
+			Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 5)
+			
+			optBtn.MouseButton1Click:Connect(function()
+				pcall(function()
+					TeleportService:TeleportToPlaceInstance(PlaceId, jobId, player)
+				end)
+			end)
+		end
+
+		scanServerBtn.MouseButton1Click:Connect(function()
+			for _, child in pairs(listFrame:GetChildren()) do
+				if child:IsA("TextButton") then
+					child:Destroy()
+				end
+			end
+			
+			scanServerBtn.Text = "SCANNING..."
+			
+			task.spawn(function()
+				pcall(function()
+					local url = "https://games.roblox.com/v1/games/" .. PlaceId .. "/servers/Public?sortOrder=Asc&limit=50"
+					local success, result = pcall(function()
+						return HttpService:JSONDecode(game:HttpGet(url))
+					end)
+					
+					if success and result and result.data then
+						local count = 0
+						for _, srv in pairs(result.data) do
+							if srv.playing and srv.maxPlayers and srv.playing < srv.maxPlayers and srv.id ~= game.JobId then
+								count = count + 1
+								AddServerOption("Pemain: " .. srv.playing .. "/" .. srv.maxPlayers, srv.id)
+								if count >= 6 then break end
+							end
+						end
+					end
+				end)
+				
+				scanServerBtn.Text = "SCAN SERVER SEPI"
+				listFrame.Visible = not listFrame.Visible
+			end)
+		end)
 
 		btnRecReplay.MouseButton1Click:Connect(function()
 			if isRecordingReplay then return end
@@ -1382,7 +1466,7 @@ local function BukaMenuUtamaUltimate()
 		end
 	end)
 
-	-- Fling Target ala Infinite Yield
+	-- Fling Target ala Infinite Yield (Tombol disesuaikan warna gelap bersih tanpa merah)
 	local flingTargetRow = Instance.new("Frame", pageTroll)
 	flingTargetRow.Size = UDim2.new(1, -20, 0, 48)
 	flingTargetRow.Position = UDim2.new(0, 10, 0, 85)
@@ -1412,13 +1496,13 @@ local function BukaMenuUtamaUltimate()
 	local btnExecFling = Instance.new("TextButton", flingTargetRow)
 	btnExecFling.Size = UDim2.new(0, 80, 0, 24)
 	btnExecFling.Position = UDim2.new(1, -80, 0, 22)
-	btnExecFling.BackgroundColor3 = Color3.fromRGB(140, 30, 30)
+	btnExecFling.BackgroundColor3 = Color3.fromRGB(25, 25, 35) -- Diubah jadi warna gelap senada tema
 	btnExecFling.Text = "FLING!"
-	btnExecFling.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btnExecFling.TextColor3 = Color3.fromRGB(220, 220, 235)
 	btnExecFling.Font = Enum.Font.GothamBold
 	btnExecFling.TextSize = 10
 	Instance.new("UICorner", btnExecFling).CornerRadius = UDim.new(0, 4)
-	Instance.new("UIStroke", btnExecFling).Color = Color3.fromRGB(200, 50, 50)
+	Instance.new("UIStroke", btnExecFling).Color = Color3.fromRGB(45, 45, 58)
 
 	btnExecFling.MouseButton1Click:Connect(function()
 		pcall(function()
