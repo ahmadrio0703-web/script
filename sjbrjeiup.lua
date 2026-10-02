@@ -1,5 +1,5 @@
 -- ==========================================
--- LYNN MOD MENU - DARK VOID (ULTIMATE FINAL + FIXED COLOR)
+-- LYNN MOD MENU - DARK VOID (FIXED SERVER SCAN LIST)
 -- ==========================================
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
@@ -426,7 +426,7 @@ local function BukaMenuUtamaUltimate()
 	pageVip.Position = UDim2.new(0, 130, 0, 45)
 	pageVip.BackgroundTransparency = 1
 	pageVip.Visible = false
-	pageVip.CanvasSize = UDim2.new(0, 0, 3.2, 0)
+	pageVip.CanvasSize = UDim2.new(0, 0, 3.5, 0)
 	pageVip.ScrollBarThickness = 3
 
 	local pagePlayer = Instance.new("ScrollingFrame", mainFrame)
@@ -721,10 +721,10 @@ local function BukaMenuUtamaUltimate()
 		Instance.new("UICorner", btnImportReplay).CornerRadius = UDim.new(0, 5)
 		Instance.new("UIStroke", btnImportReplay).Color = Color3.fromRGB(40, 40, 52)
 
-		-- FITUR TAMBAHAN: SCAN SERVER SEPI DI TAB VIP
+		-- FITUR SCAN SERVER SEPI DI TAB VIP (POSISI DIDALAM HALAMAN VIP)
 		local scanServerRow = Instance.new("Frame", pageVip)
-		scanServerRow.Size = UDim2.new(1, -20, 0, 40)
-		scanServerRow.Position = UDim2.new(0, 10, 0, 312)
+		scanServerRow.Size = UDim2.new(1, -20, 0, 35)
+		scanServerRow.Position = UDim2.new(0, 10, 0, 315)
 		scanServerRow.BackgroundTransparency = 1
 
 		local scanServerBtn = Instance.new("TextButton", scanServerRow)
@@ -739,30 +739,38 @@ local function BukaMenuUtamaUltimate()
 		scanBtnStroke.Color = Color3.fromRGB(45, 45, 58)
 		scanBtnStroke.Thickness = 1.2
 
-		-- Frame List Pilihan Server (Muncul di sebelah menu utama)
-		local listFrame = Instance.new("ScrollingFrame", mainFrame)
-		listFrame.Size = UDim2.new(0, 190, 0, 320)
-		listFrame.Position = UDim2.new(1, 10, 0, 0)
-		listFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 24)
-		listFrame.BorderSizePixel = 0
-		listFrame.Visible = false
-		listFrame.ScrollBarThickness = 4
-		Instance.new("UICorner", listFrame).CornerRadius = UDim.new(0, 8)
+		-- Container List Pilihan Server (Muncul langsung di bawah tombol scan di dalam tab VIP)
+		local listContainer = Instance.new("Frame", pageVip)
+		listContainer.Size = UDim2.new(1, -20, 0, 140)
+		listContainer.Position = UDim2.new(0, 10, 0, 358)
+		listContainer.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
+		listContainer.BorderSizePixel = 0
+		listContainer.Visible = false
+		Instance.new("UICorner", listContainer).CornerRadius = UDim.new(0, 6)
+		Instance.new("UIStroke", listContainer).Color = Color3.fromRGB(40, 40, 52)
 
-		local listLayout = Instance.new("UIListLayout", listFrame)
+		local listScroll = Instance.new("ScrollingFrame", listContainer)
+		listScroll.Size = UDim2.new(1, -6, 1, -6)
+		listScroll.Position = UDim2.new(0, 3, 0, 3)
+		listScroll.BackgroundTransparency = 1
+		listScroll.BorderSizePixel = 0
+		listScroll.ScrollBarThickness = 3
+		listScroll.CanvasSize = UDim2.new(0, 0, 2, 0)
+
+		local listLayout = Instance.new("UIListLayout", listScroll)
 		listLayout.SortOrder = Enum.SortOrder.LayoutOrder
 		listLayout.Padding = UDim.new(0, 4)
 
 		local function AddServerOption(text, jobId)
-			local optBtn = Instance.new("TextButton", listFrame)
-			optBtn.Size = UDim2.new(1, -8, 0, 32)
-			optBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 42) -- Warna gelap serasi, bersih tanpa merah
+			local optBtn = Instance.new("TextButton", listScroll)
+			optBtn.Size = UDim2.new(1, 0, 0, 30)
+			optBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 32)
 			optBtn.TextColor3 = Color3.fromRGB(240, 240, 240)
-			optBtn.TextSize = 12
+			optBtn.TextSize = 11
 			optBtn.Font = Enum.Font.Gotham
 			optBtn.Text = text
 			
-			Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 5)
+			Instance.new("UICorner", optBtn).CornerRadius = UDim.new(0, 4)
 			
 			optBtn.MouseButton1Click:Connect(function()
 				pcall(function()
@@ -772,7 +780,7 @@ local function BukaMenuUtamaUltimate()
 		end
 
 		scanServerBtn.MouseButton1Click:Connect(function()
-			for _, child in pairs(listFrame:GetChildren()) do
+			for _, child in pairs(listScroll:GetChildren()) do
 				if child:IsA("TextButton") then
 					child:Destroy()
 				end
@@ -800,7 +808,7 @@ local function BukaMenuUtamaUltimate()
 				end)
 				
 				scanServerBtn.Text = "SCAN SERVER SEPI"
-				listFrame.Visible = not listFrame.Visible
+				listContainer.Visible = not listContainer.Visible
 			end)
 		end)
 
@@ -1466,7 +1474,7 @@ local function BukaMenuUtamaUltimate()
 		end
 	end)
 
-	-- Fling Target ala Infinite Yield (Tombol disesuaikan warna gelap bersih tanpa merah)
+	-- Fling Target ala Infinite Yield
 	local flingTargetRow = Instance.new("Frame", pageTroll)
 	flingTargetRow.Size = UDim2.new(1, -20, 0, 48)
 	flingTargetRow.Position = UDim2.new(0, 10, 0, 85)
@@ -1496,7 +1504,7 @@ local function BukaMenuUtamaUltimate()
 	local btnExecFling = Instance.new("TextButton", flingTargetRow)
 	btnExecFling.Size = UDim2.new(0, 80, 0, 24)
 	btnExecFling.Position = UDim2.new(1, -80, 0, 22)
-	btnExecFling.BackgroundColor3 = Color3.fromRGB(25, 25, 35) -- Diubah jadi warna gelap senada tema
+	btnExecFling.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
 	btnExecFling.Text = "FLING!"
 	btnExecFling.TextColor3 = Color3.fromRGB(220, 220, 235)
 	btnExecFling.Font = Enum.Font.GothamBold
