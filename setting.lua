@@ -1,5 +1,5 @@
 -- ==========================================
--- LYNN MOD MENU - TAB SETTINGS (EXTERNAL FILE)
+-- LYNN MOD MENU - TAB SETTINGS (FIXED FILE)
 -- ==========================================
 local pagePerf, menuGui = ... -- Menerima parameter operan dari script utama
 local Players = game:GetService("Players")
@@ -8,6 +8,7 @@ local TweenService = game:GetService("TweenService")
 local TeleportService = game:GetService("TeleportService")
 local Lighting = game:GetService("Lighting")
 local RunService = game:GetService("RunService")
+local HttpService = game:GetService("HttpService")
 local PlaceId = game.PlaceId
 
 local function TampilkanNotifikasiHijau(pesan)
@@ -299,9 +300,11 @@ end)
 btnHop.MouseButton1Click:Connect(function()
 	pcall(function()
 		TampilkanNotifikasiHijau("Mencari server lain...")
-		local servers = game:GetService("HttpService")íst and game:GetService("HttpService"):JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/"..PlaceId.."/servers/Public?sortOrder=Asc&limit=10"))
-		if servers and servers.data then
-			for _, s in pairs(servers.data) do
+		local success, result = pcall(function()
+			return HttpService:JSONDecode(game:HttpGet("https://games.roblox.com/v1/games/" .. PlaceId .. "/servers/Public?sortOrder=Asc&limit=10"))
+		end)
+		if success and result and result.data then
+			for _, s in pairs(result.data) do
 				if s.id ~= game.JobId and s.playing < s.maxPlayers then
 					TeleportService:TeleportToPlaceInstance(PlaceId, s.id, player)
 					break
