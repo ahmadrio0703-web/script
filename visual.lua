@@ -1,5 +1,5 @@
 -- ==========================================
--- LYNN MOD MENU - TAB VISUALS (UPDATED ESP + CUSTOM OBJECT)
+-- LYNN MOD MENU - TAB VISUALS (EASY COLOR PICKER)
 -- ==========================================
 local pageVisual, menuGui = ... -- Menerima parameter operan dari script utama
 local Players = game:GetService("Players")
@@ -44,35 +44,65 @@ local function TampilkanNotifikasiHijau(pesan)
 	end)
 end
 
-local function BuatRowSaklar(parent, posY, judul, defaultAngka, butuhInput)
+-- Tabel Pilihan Warna Siap Pakai
+local pilihanWarna = {
+	{nama = "Putih", warna = Color3.fromRGB(255, 255, 255)},
+	{nama = "Merah", warna = Color3.fromRGB(255, 50, 50)},
+	{nama = "Hijau", warna = Color3.fromRGB(50, 255, 50)},
+	{nama = "Biru", warna = Color3.fromRGB(50, 150, 255)},
+	{nama = "Kuning", warna = Color3.fromRGB(255, 220, 50)},
+	{nama = "Ungu", warna = Color3.fromRGB(180, 50, 255)},
+}
+
+local function BuatRowESP(parent, posY, judul, callbackWarnaBerubah)
 	local row = Instance.new("Frame", parent)
 	row.Size = UDim2.new(1, -20, 0, 35)
 	row.Position = UDim2.new(0, 10, 0, posY)
 	row.BackgroundTransparency = 1
 	
 	local label = Instance.new("TextLabel", row)
-	label.Size = UDim2.new(0.5, 0, 1, 0)
+	label.Size = UDim2.new(0.35, 0, 1, 0)
 	label.BackgroundTransparency = 1
 	label.Text = judul
 	label.TextColor3 = Color3.fromRGB(210, 210, 220)
 	label.Font = Enum.Font.Gotham
-	label.TextSize = 12
+	label.TextSize = 11
 	label.TextXAlignment = Enum.TextXAlignment.Left
 	
-	local inputBox = nil
-	if butuhInput then
-		inputBox = Instance.new("TextBox", row)
-		inputBox.Size = UDim2.new(0, 45, 0, 24)
-		inputBox.Position = UDim2.new(1, -100, 0.5, -12)
-		inputBox.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
-		inputBox.TextColor3 = Color3.fromRGB(240, 240, 250)
-		inputBox.Text = defaultAngka
-		inputBox.Font = Enum.Font.Gotham
-		inputBox.TextSize = 11 
-		Instance.new("UICorner", inputBox).CornerRadius = UDim.new(0, 4)
-		Instance.new("UIStroke", inputBox).Color = Color3.fromRGB(38, 38, 48)
-	end
+	-- Tombol Indikator Warna (Sekaligus untuk mengganti warna saat diklik)
+	local btnWarna = Instance.new("TextButton", row)
+	btnWarna.Size = UDim2.new(0, 55, 0, 22)
+	btnWarna.Position = UDim2.new(1, -105, 0.5, -11)
+	btnWarna.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	btnWarna.Text = "Warna"
+	btnWarna.TextColor3 = Color3.fromRGB(20, 20, 20)
+	btnWarna.Font = Enum.Font.GothamBold
+	btnWarna.TextSize = 9
+	Instance.new("UICorner", btnWarna).CornerRadius = UDim.new(0, 4)
 	
+	local currentIndex = 1
+	btnWarna.MouseButton1Click:Connect(function()
+		currentIndex = currentIndex + 1
+		if currentIndex > #pilihanWarna then currentIndex = 1 end
+		local selected = pilihanWarna[currentIndex]
+		btnWarna.BackgroundColor3 = selected.warna
+		btnWarna.Text = selected.nama
+		-- Ubah teks jadi gelap/terang otomatis agar terbaca
+		if selected.nama == "Putih" or selected.nama == "Kuning" then
+			btnWarna.TextColor3 = Color3.fromRGB(20, 20, 20)
+		else
+			btnWarna.TextColor3 = Color3.fromRGB(255, 255, 255)
+		end
+		if callbackWarnaBerubah then
+			callbackWarnaBerubah(selected.warna)
+		end
+	end)
+	-- Set default awal
+	btnWarna.BackgroundColor3 = pilihanWarna[1].warna
+	btnWarna.Text = pilihanWarna[1].nama
+	btnWarna.TextColor3 = Color3.fromRGB(20, 20, 20)
+
+	-- Saklar On/Off
 	local switchBg = Instance.new("Frame", row)
 	switchBg.Size = UDim2.new(0, 40, 0, 20)
 	switchBg.Position = UDim2.new(1, -40, 0.5, -10)
@@ -93,7 +123,7 @@ local function BuatRowSaklar(parent, posY, judul, defaultAngka, butuhInput)
 	btn.BackgroundTransparency = 1
 	btn.Text = ""
 	
-	return btn, switchBg, knob, inputBox
+	return btn, switchBg, knob, function() return pilihanWarna[currentIndex].warna end
 end
 
 local warnaBgOff = Color3.fromRGB(18, 18, 24)
@@ -109,53 +139,143 @@ local function AnimasiSaklar(isOn, bg, knob)
 end
 
 -- ==========================================
--- 1. ESP BOX, NAMA, & JARAK PLAYER
+-- 1. ESP BOX
 -- ==========================================
-local btnEsp, bgEsp, knobEsp, _ = BuatRowSaklar(pageVisual, 15, "ESP Player (Box+Name+Dist)", "", false)
-local espOn = false
-local espConnection = nil
+local warnaBoxAktif = pilihanWarna[1].warna
+local btnEspBox, bgEspBox, knobEspBox, GetWarnaBox = BuatRowESP(pageVisual, 10, "ESP Box", function(w)
+	warnaBoxAktif = w
+	RefreshEspBoxKondisional()
+end)
+local espBoxOn = false
 
-local function refreshESP()
+local function RefreshEspBoxKondisional()
 	for _, p in pairs(Players:GetPlayers()) do
-		if p ~= player and p.Character and p.Character:FindFirstChild("KotakESP") then 
-			p.Character.KotakESP:Destroy() 
+		if p ~= player and p.Character and p.Character:FindFirstChild("LynnBoxESP") then 
+			p.Character.LynnBoxESP:Destroy() 
 		end
 	end
-	
-	if espOn then
+	if espBoxOn then
 		for _, p in pairs(Players:GetPlayers()) do
 			if p ~= player and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
 				local bill = Instance.new("BillboardGui")
-				bill.Name = "KotakESP"
+				bill.Name = "LynnBoxESP"
 				bill.Adornee = p.Character.HumanoidRootPart
 				bill.Size = UDim2.new(4, 0, 5.5, 0)
 				bill.AlwaysOnTop = true
 				
-				-- Kotak ESP
 				local frame = Instance.new("Frame", bill)
 				frame.Size = UDim2.new(1, 0, 1, 0)
 				frame.BackgroundTransparency = 1
 				local stroke = Instance.new("UIStroke", frame)
-				stroke.Color = Color3.fromRGB(220, 220, 235) 
+				stroke.Color = warnaBoxAktif
 				stroke.Thickness = 1.5
 				
-				-- Teks Nama & Jarak di atas kotak
-				local infoText = Instance.new("TextLabel", bill)
-				infoText.Name = "InfoText"
-				infoText.Size = UDim2.new(1, 0, 0, 25)
-				infoText.Position = UDim2.new(0, 0, 0, -25)
-				infoText.BackgroundTransparency = 1
-				infoText.TextColor3 = Color3.fromRGB(255, 255, 255)
-				infoText.Font = Enum.Font.GothamBold
-				infoText.TextSize = 10
-				infoText.TextStrokeTransparency = 0.5
+				bill.Parent = p.Character
+			end
+		end
+	end
+end
+
+btnEspBox.MouseButton1Click:Connect(function()
+	espBoxOn = not espBoxOn
+	AnimasiSaklar(espBoxOn, bgEspBox, knobEspBox)
+	warnaBoxAktif = GetWarnaBox()
+	RefreshEspBoxKondisional()
+	TampilkanNotifikasiHijau(espBoxOn and "ESP Box Aktif!" or "ESP Box Mati.")
+end)
+
+-- ==========================================
+-- 2. ESP NAMA
+-- ==========================================
+local warnaNamaAktif = pilihanWarna[2].warna -- Default Hijau
+local btnEspName, bgEspName, knobEspName, GetWarnaName = BuatRowESP(pageVisual, 50, "ESP Nama", function(w)
+	warnaNamaAktif = w
+	RefreshEspNameKondisional()
+end)
+local espNameOn = false
+
+local function RefreshEspNameKondisional()
+	for _, p in pairs(Players:GetPlayers()) do
+		if p ~= player and p.Character and p.Character:FindFirstChild("LynnNameESP") then 
+			p.Character.LynnNameESP:Destroy() 
+		end
+	end
+	if espNameOn then
+		for _, p in pairs(Players:GetPlayers()) do
+			if p ~= player and p.Character and p.Character:FindFirstChild("Head") then
+				local bill = Instance.new("BillboardGui")
+				bill.Name = "LynnNameESP"
+				bill.Adornee = p.Character.Head
+				bill.Size = UDim2.new(0, 100, 0, 30)
+				bill.StudsOffset = Vector3.new(0, 2, 0)
+				bill.AlwaysOnTop = true
+				
+				local txt = Instance.new("TextLabel", bill)
+				txt.Size = UDim2.new(1, 0, 1, 0)
+				txt.BackgroundTransparency = 1
+				txt.Text = p.Name
+				txt.TextColor3 = warnaNamaAktif
+				txt.Font = Enum.Font.GothamBold
+				txt.TextSize = 11
+				txt.TextStrokeTransparency = 0.4
+				
+				bill.Parent = p.Character
+			end
+		end
+	end
+end
+
+btnEspName.MouseButton1Click:Connect(function()
+	espNameOn = not espNameOn
+	AnimasiSaklar(espNameOn, bgEspName, knobEspName)
+	warnaNamaAktif = GetWarnaName()
+	RefreshEspNameKondisional()
+	TampilkanNotifikasiHijau(espNameOn and "ESP Nama Aktif!" or "ESP Nama Mati.")
+end)
+
+-- ==========================================
+-- 3. ESP JARAK (DISTANCE)
+-- ==========================================
+local warnaDistAktif = pilihanWarna[5].warna -- Default Kuning
+local btnEspDist, bgEspDist, knobEspDist, GetWarnaDist = BuatRowESP(pageVisual, 90, "ESP Jarak", function(w)
+	warnaDistAktif = w
+	RefreshEspDistKondisional()
+end)
+local espDistOn = false
+local distConnection = nil
+
+local function RefreshEspDistKondisional()
+	for _, p in pairs(Players:GetPlayers()) do
+		if p ~= player and p.Character and p.Character:FindFirstChild("LynnDistESP") then 
+			p.Character.LynnDistESP:Destroy() 
+		end
+	end
+	if distConnection then distConnection:Disconnect() end
+	
+	if espDistOn then
+		for _, p in pairs(Players:GetPlayers()) do
+			if p ~= player and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+				local bill = Instance.new("BillboardGui")
+				bill.Name = "LynnDistESP"
+				bill.Adornee = p.Character.HumanoidRootPart
+				bill.Size = UDim2.new(0, 100, 0, 30)
+				bill.StudsOffset = Vector3.new(0, -3, 0)
+				bill.AlwaysOnTop = true
+				
+				local txt = Instance.new("TextLabel", bill)
+				txt.Name = "DistText"
+				txt.Size = UDim2.new(1, 0, 1, 0)
+				txt.BackgroundTransparency = 1
+				txt.TextColor3 = warnaDistAktif
+				txt.Font = Enum.Font.GothamBold
+				txt.TextSize = 10
+				txt.TextStrokeTransparency = 0.4
 				
 				bill.Parent = p.Character
 			end
 		end
 		
-		-- Loop update jarak real-time
-		espConnection = RunService.RenderStepped:Connect(function()
+		distConnection = RunService.RenderStepped:Connect(function()
 			pcall(function()
 				local myChar = player.Character
 				local myRoot = myChar and myChar:FindFirstChild("HumanoidRootPart")
@@ -163,44 +283,37 @@ local function refreshESP()
 				
 				for _, p in pairs(Players:GetPlayers()) do
 					if p ~= player and p.Character then
-						local char = p.Character
-						local root = char:FindFirstChild("HumanoidRootPart")
-						local bill = char:FindFirstChild("KotakESP")
+						local root = p.Character:FindFirstChild("HumanoidRootPart")
+						local bill = p.Character:FindFirstChild("LynnDistESP")
 						if root and bill then
-							local textLabel = bill:FindFirstChild("InfoText")
-							if textLabel then
+							local txt = bill:FindFirstChild("DistText")
+							if txt then
 								local dist = math.floor((myRoot.Position - root.Position).Magnitude)
-								textLabel.Text = p.Name .. " [" .. dist .. "m]"
+								txt.Text = "[" .. dist .. "m]"
+								txt.TextColor3 = warnaDistAktif
 							end
 						end
 					end
 				end
 			end)
 		end)
-		TampilkanNotifikasiHijau("ESP Player Aktif!")
-	else
-		if espConnection then espConnection:Disconnect() end
-		for _, p in pairs(Players:GetPlayers()) do
-			if p ~= player and p.Character and p.Character:FindFirstChild("KotakESP") then 
-				p.Character.KotakESP:Destroy() 
-			end
-		end
-		TampilkanNotifikasiHijau("ESP Player Dimatikan.")
 	end
 end
 
-btnEsp.MouseButton1Click:Connect(function() 
-	espOn = not espOn 
-	AnimasiSaklar(espOn, bgEsp, knobEsp) 
-	refreshESP() 
+btnEspDist.MouseButton1Click:Connect(function()
+	espDistOn = not espDistOn
+	AnimasiSaklar(espDistOn, bgEspDist, knobEspDist)
+	warnaDistAktif = GetWarnaDist()
+	RefreshEspDistKondisional()
+	TampilkanNotifikasiHijau(espDistOn and "ESP Jarak Aktif!" or "ESP Jarak Mati.")
 end)
 
 -- ==========================================
--- 2. FULLBRIGHT
+-- 4. FULLBRIGHT
 -- ==========================================
 local fbRow = Instance.new("Frame", pageVisual)
 fbRow.Size = UDim2.new(1, -20, 0, 35)
-fbRow.Position = UDim2.new(0, 10, 0, 60)
+fbRow.Position = UDim2.new(0, 10, 0, 135)
 fbRow.BackgroundTransparency = 1
 
 local fbLabel = Instance.new("TextLabel", fbRow)
@@ -209,7 +322,7 @@ fbLabel.BackgroundTransparency = 1
 fbLabel.Text = "Fullbright"
 fbLabel.TextColor3 = Color3.fromRGB(210, 210, 220)
 fbLabel.Font = Enum.Font.Gotham
-fbLabel.TextSize = 12
+fbLabel.TextSize = 11
 fbLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 local inputBrightness = Instance.new("TextBox", fbRow)
@@ -248,63 +361,81 @@ local originalBrightness = Lighting.Brightness
 local originalClock = Lighting.ClockTime
 local originalShadows = Lighting.GlobalShadows
 
-local function UpdateFullbright()
+btnFullbright.MouseButton1Click:Connect(function()
+	fullbrightOn = not fullbrightOn
+	AnimasiSaklar(fullbrightOn, switchFbBg, knobFb)
 	if fullbrightOn then
-		local customBrightness = tonumber(inputBrightness.Text) or 3
-		Lighting.Brightness = customBrightness
+		Lighting.Brightness = tonumber(inputBrightness.Text) or 3
 		Lighting.ClockTime = 14 
 		Lighting.GlobalShadows = false
 		Lighting.FogEnd = 99999
+		TampilkanNotifikasiHijau("Fullbright Aktif!")
 	else
 		Lighting.Brightness = originalBrightness
 		Lighting.ClockTime = originalClock
 		Lighting.GlobalShadows = originalShadows
-	end
-end
-
-btnFullbright.MouseButton1Click:Connect(function()
-	fullbrightOn = not fullbrightOn
-	AnimasiSaklar(fullbrightOn, switchFbBg, knobFb)
-	UpdateFullbright()
-	if fullbrightOn then
-		TampilkanNotifikasiHijau("Fullbright Aktif!")
-	else
 		TampilkanNotifikasiHijau("Fullbright Dimatikan.")
 	end
 end)
 
 -- ==========================================
--- 3. CUSTOM OBJECT ESP (KEYWORD SEARCH)
+-- 5. CUSTOM OBJECT ESP (KEYWORD SEARCH + BUTTON COLOR)
 -- ==========================================
 local objRow = Instance.new("Frame", pageVisual)
-objRow.Size = UDim2.new(1, -20, 0, 48)
-objRow.Position = UDim2.new(0, 10, 0, 105)
+objRow.Size = UDim2.new(1, -20, 0, 55)
+objRow.Position = UDim2.new(0, 10, 0, 178)
 objRow.BackgroundTransparency = 1
 
 local objLabel = Instance.new("TextLabel", objRow)
 objLabel.Size = UDim2.new(1, 0, 0, 18)
 objLabel.BackgroundTransparency = 1
-objLabel.Text = "Custom Object ESP (Ketik Kata Kunci)"
+objLabel.Text = "Custom Object ESP"
 objLabel.TextColor3 = Color3.fromRGB(210, 210, 220)
 objLabel.Font = Enum.Font.Gotham
 objLabel.TextSize = 11
 objLabel.TextXAlignment = Enum.TextXAlignment.Left
 
+-- TextBox Keyword Objek
 local inputObjKeyword = Instance.new("TextBox", objRow)
-inputObjKeyword.Size = UDim2.new(0, 145, 0, 24)
-inputObjKeyword.Position = UDim2.new(0, 0, 0, 22)
+inputObjKeyword.Size = UDim2.new(0, 95, 0, 24)
+inputObjKeyword.Position = UDim2.new(0, 0, 0, 24)
 inputObjKeyword.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
 inputObjKeyword.TextColor3 = Color3.fromRGB(240, 240, 250)
-inputObjKeyword.PlaceholderText = "Contoh: pohon, chest..."
+inputObjKeyword.PlaceholderText = "kata kunci..."
 inputObjKeyword.Text = ""
 inputObjKeyword.Font = Enum.Font.Gotham
 inputObjKeyword.TextSize = 10 
 Instance.new("UICorner", inputObjKeyword).CornerRadius = UDim.new(0, 4)
 Instance.new("UIStroke", inputObjKeyword).Color = Color3.fromRGB(38, 38, 48)
 
+-- Tombol Ganti Warna Object ESP
+local btnObjWarna = Instance.new("TextButton", objRow)
+btnObjWarna.Size = UDim2.new(0, 55, 0, 24)
+btnObjWarna.Position = UDim2.new(0, 101, 0, 24)
+btnObjWarna.BackgroundColor3 = pilihanWarna[5].warna -- Kuning
+btnObjWarna.Text = "Kuning"
+btnObjWarna.TextColor3 = Color3.fromRGB(20, 20, 20)
+btnObjWarna.Font = Enum.Font.GothamBold
+btnObjWarna.TextSize = 9
+Instance.new("UICorner", btnObjWarna).CornerRadius = UDim.new(0, 4)
+
+local objColorIndex = 5
+btnObjWarna.MouseButton1Click:Connect(function()
+	objColorIndex = objColorIndex + 1
+	if objColorIndex > #pilihanWarna then objColorIndex = 1 end
+	local selected = pilihanWarna[objColorIndex]
+	btnObjWarna.BackgroundColor3 = selected.warna
+	btnObjWarna.Text = selected.nama
+	if selected.nama == "Putih" or selected.nama == "Kuning" then
+		btnObjWarna.TextColor3 = Color3.fromRGB(20, 20, 20)
+	else
+		btnObjWarna.TextColor3 = Color3.fromRGB(255, 255, 255)
+	end
+end)
+
 local switchObjBg = Instance.new("Frame", objRow)
 switchObjBg.Size = UDim2.new(0, 40, 0, 20)
-switchObjBg.Position = UDim2.new(1, -40, 0, 24)
+switchObjBg.Position = UDim2.new(1, -40, 0, 26)
 switchObjBg.BackgroundColor3 = Color3.fromRGB(18, 18, 24) 
 Instance.new("UICorner", switchObjBg).CornerRadius = UDim.new(1, 0)
 Instance.new("UIStroke", switchObjBg).Color = Color3.fromRGB(40, 40, 52)
@@ -348,34 +479,30 @@ btnObjEsp.MouseButton1Click:Connect(function()
 			while objEspActive do
 				pcall(function()
 					ClearCustomHighlights()
+					local warnaObjPilihan = pilihanWarna[objColorIndex].warna
 					local count = 0
 					
 					for _, obj in pairs(workspace:GetDescendants()) do
 						if (obj:IsA("BasePart") or obj:IsA("Model")) then
 							if string.find(string.lower(obj.Name), keyword) then
 								count = count + 1
-								if count > 100 then break end -- Batasi maksimal 100 objek biar nggak lag
+								if count > 100 then break end
 								
 								local hl = Instance.new("Highlight")
 								hl.Name = "CustomObjectESP"
-								hl.FillColor = Color3.fromRGB(255, 170, 0) -- Warna Oranye Menyala
+								hl.FillColor = warnaObjPilihan
 								hl.OutlineColor = Color3.fromRGB(255, 255, 255)
-                                hl.FillTransparency = 0.5
+								hl.FillTransparency = 0.5
 								hl.OutlineTransparency = 0.2
-								
-								if obj:IsA("Model") then
-									hl.Adornee = obj
-								else
-									hl.Adornee = obj
-								end
-								
+								hl.Adornee = obj
 								hl.Parent = menuGui
+								
 								table.insert(customHighlights, hl)
 							end
 						end
 					end
 				end)
-				task.wait(3) -- Refresh pencarian setiap 3 detik
+				task.wait(3)
 			end
 		end)
 	else
