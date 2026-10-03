@@ -1,5 +1,5 @@
 -- ==========================================
--- LYNN MOD MENU - DARK VOID (FINAL INTEGRATED)
+-- LYNN MOD MENU - DARK VOID (FINAL + SCANNER TAB)
 -- ==========================================
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
@@ -273,7 +273,7 @@ local function BukaMenuUtamaUltimate()
 	Instance.new("UICorner", btnMax).CornerRadius = UDim.new(0, 5)
 	Instance.new("UIStroke", btnMax).Color = Color3.fromRGB(45, 45, 60)
 
-	-- SIDEBAR KIRI
+	-- SIDEBAR KIRI (Ditambah ruang untuk 7 Tab)
 	local sidebarBg = Instance.new("Frame", mainFrame)
 	sidebarBg.Size = UDim2.new(0, 125, 1, 0)
 	sidebarBg.BackgroundColor3 = Color3.fromRGB(11, 11, 15)
@@ -365,28 +365,29 @@ local function BukaMenuUtamaUltimate()
 
 	local function BuatTombolTab(posY, namaTeks)
 		local btn = Instance.new("TextButton", mainFrame)
-		btn.Size = UDim2.new(0, 105, 0, 24)
+		btn.Size = UDim2.new(0, 105, 0, 22) -- Sedikit dirapatkan agar muat 7 tab dengan pas
 		btn.Position = UDim2.new(0, 10, 0, posY)
 		btn.BackgroundColor3 = Color3.fromRGB(11, 11, 15) 
 		btn.Text = namaTeks
 		btn.TextColor3 = Color3.fromRGB(140, 140, 155)
 		btn.Font = Enum.Font.Gotham
-		btn.TextSize = 11
+		btn.TextSize = 10.5
 		Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
 		return btn
 	end
 
-	-- TOMBOL TAB
-	local btnTabVip    = BuatTombolTab(75, "VIP")
-	local btnTabPlayer = BuatTombolTab(103, "Player")
-	local btnTabVisual = BuatTombolTab(131, "Visuals")
-	local btnTabMount  = BuatTombolTab(159, "Mount")
-	local btnTabTroll  = BuatTombolTab(187, "Troll")
-	local btnTabPerf   = BuatTombolTab(215, "Settings")
+	-- TOMBOL TAB (Ditambah tab "Scanner" untuk Inspector & X-Ray)
+	local btnTabVip     = BuatTombolTab(65, "VIP")
+	local btnTabPlayer  = BuatTombolTab(90, "Player")
+	local btnTabVisual  = BuatTombolTab(115, "Visuals")
+	local btnTabScanner = BuatTombolTab(140, "Scanner") -- TAB BARU FITUR INSPECTOR & X-RAY
+	local btnTabMount   = BuatTombolTab(165, "Mount")
+	local btnTabTroll   = BuatTombolTab(190, "Troll")
+	local btnTabPerf    = BuatTombolTab(215, "Settings")
 
 	btnTabVip.TextColor3 = Color3.fromRGB(240, 240, 245)
 	btnTabVip.Font = Enum.Font.GothamBold
-	btnTabVip.TextSize = 12
+	btnTabVip.TextSize = 11.5
 	local vipStroke = Instance.new("UIStroke", btnTabVip)
 	vipStroke.Color = Color3.fromRGB(80, 80, 100)
 	vipStroke.Thickness = 1
@@ -396,12 +397,12 @@ local function BukaMenuUtamaUltimate()
 
 	local wmText = Instance.new("TextLabel", mainFrame)
 	wmText.Size = UDim2.new(0, 100, 0, 15)
-	wmText.Position = UDim2.new(0, 14, 1, -20) 
+	wmText.Position = UDim2.new(0, 14, 1, -18) 
 	wmText.BackgroundTransparency = 1
 	wmText.Text = "DarkVoid // @lyosh"
 	wmText.TextColor3 = Color3.fromRGB(80, 80, 100) 
 	wmText.Font = Enum.Font.Gotham
-	wmText.TextSize = 10
+	wmText.TextSize = 9.5
 	wmText.TextXAlignment = Enum.TextXAlignment.Left
 
 	local judulMain = Instance.new("TextLabel", mainFrame)
@@ -420,7 +421,7 @@ local function BukaMenuUtamaUltimate()
 	garisJudul.BackgroundColor3 = Color3.fromRGB(25, 25, 32)
 	garisJudul.BorderSizePixel = 0
 
-	-- HALAMAN / PAGES
+	-- HALAMAN / PAGES (Ditambah pageScanner)
 	local pageVip = Instance.new("ScrollingFrame", mainFrame)
 	pageVip.Size = UDim2.new(1, -130, 1, -45)
 	pageVip.Position = UDim2.new(0, 130, 0, 45)
@@ -444,6 +445,14 @@ local function BukaMenuUtamaUltimate()
 	pageVisual.Visible = false 
 	pageVisual.CanvasSize = UDim2.new(0, 0, 1.2, 0)
 	pageVisual.ScrollBarThickness = 3
+
+	local pageScanner = Instance.new("ScrollingFrame", mainFrame) -- HALAMAN TAB BARU
+	pageScanner.Size = UDim2.new(1, -130, 1, -45)
+	pageScanner.Position = UDim2.new(0, 130, 0, 45)
+	pageScanner.BackgroundTransparency = 1
+	pageScanner.Visible = false
+	pageScanner.CanvasSize = UDim2.new(0, 0, 1.4, 0)
+	pageScanner.ScrollBarThickness = 3
 
 	local pageMount = Instance.new("ScrollingFrame", mainFrame)
 	pageMount.Size = UDim2.new(1, -130, 1, -45)
@@ -521,7 +530,7 @@ local function BukaMenuUtamaUltimate()
 		return btn, switchBg, knob, inputBox
 	end
 
-	-- TAB 1: VIP (FAST TAP, BOT REPLAY, TELEKINESIS, & SERVER SCAN)
+	-- TAB 1: VIP
 	local databaseVip = {
 		["Lyosh71"] = true,
 		["gantung300"] = true,
@@ -721,7 +730,7 @@ local function BukaMenuUtamaUltimate()
 		Instance.new("UICorner", btnImportReplay).CornerRadius = UDim.new(0, 5)
 		Instance.new("UIStroke", btnImportReplay).Color = Color3.fromRGB(40, 40, 52)
 
-		-- FITUR TELEKINESIS (VIP EXCLUSIVE)
+		-- TELEKINESIS
 		local telekinesisRow = Instance.new("Frame", pageVip)
 		telekinesisRow.Size = UDim2.new(1, -20, 0, 32)
 		telekinesisRow.Position = UDim2.new(0, 10, 0, 315) 
@@ -734,7 +743,7 @@ local function BukaMenuUtamaUltimate()
 		telekinesisBtn.TextSize = 10
 		telekinesisBtn.Font = Enum.Font.GothamBold
 		telekinesisBtn.Text = "ACTIVATE TELEKINESIS (V2)"
-		Instance.new("UICorner", telekinesisBtn).CornerRadius = UDim.new(1, 0) -- Slim Pill Shape
+		Instance.new("UICorner", telekinesisBtn).CornerRadius = UDim.new(1, 0)
 		local teleBtnStroke = Instance.new("UIStroke", telekinesisBtn)
 		teleBtnStroke.Color = Color3.fromRGB(55, 55, 75)
 		teleBtnStroke.Thickness = 1
@@ -763,7 +772,7 @@ local function BukaMenuUtamaUltimate()
 			end)
 		end)
 
-		-- FITUR SCAN SERVER SEPI DI TAB VIP (POSISI PALING BAWAH SESUDAH TELEKINESIS)
+		-- SCAN SERVER SEPI
 		local scanServerRow = Instance.new("Frame", pageVip)
 		scanServerRow.Size = UDim2.new(1, -20, 0, 32)
 		scanServerRow.Position = UDim2.new(0, 10, 0, 357)
@@ -776,12 +785,11 @@ local function BukaMenuUtamaUltimate()
 		scanServerBtn.TextSize = 10
 		scanServerBtn.Font = Enum.Font.GothamBold
 		scanServerBtn.Text = "SCAN SERVER SEPI"
-		Instance.new("UICorner", scanServerBtn).CornerRadius = UDim.new(1, 0) -- Slim Pill Shape
+		Instance.new("UICorner", scanServerBtn).CornerRadius = UDim.new(1, 0)
 		local scanBtnStroke = Instance.new("UIStroke", scanServerBtn)
 		scanBtnStroke.Color = Color3.fromRGB(55, 55, 75)
 		scanBtnStroke.Thickness = 1
 
-		-- Container List Pilihan Server (Muncul langsung di bawah tombol scan di dalam tab VIP)
 		local listContainer = Instance.new("Frame", pageVip)
 		listContainer.Size = UDim2.new(1, -20, 0, 140)
 		listContainer.Position = UDim2.new(0, 10, 0, 396)
@@ -831,7 +839,7 @@ local function BukaMenuUtamaUltimate()
 			end
 			
 			scanServerBtn.Text = "SCANNING..."
-			scanServerBtn.TextColor3 = Color3.fromRGB(80, 220, 120) -- Berubah menjadi hijau saat dipencet
+			scanServerBtn.TextColor3 = Color3.fromRGB(80, 220, 120)
 			
 			task.spawn(function()
 				pcall(function()
@@ -853,7 +861,7 @@ local function BukaMenuUtamaUltimate()
 				end)
 				
 				scanServerBtn.Text = "SCAN SERVER SEPI"
-				scanServerBtn.TextColor3 = Color3.fromRGB(200, 200, 215) -- Kembali ke warna normal
+				scanServerBtn.TextColor3 = Color3.fromRGB(200, 200, 215)
 				listContainer.Visible = not listContainer.Visible
 			end)
 		end)
@@ -1332,7 +1340,257 @@ local function BukaMenuUtamaUltimate()
 	btnEsp.MouseButton1Click:Connect(function() espOn = not espOn AnimasiSaklar(espOn, bgEsp, knobEsp) refreshESP() end)
 
 	-- ==========================================
-	-- TAB 4: MOUNT
+	-- TAB 4: SCANNER (FITUR BARU INSPECTOR & X-RAY)
+	-- ==========================================
+	local scanTitle = Instance.new("TextLabel", pageScanner)
+	scanTitle.Size = UDim2.new(1, -20, 0, 25)
+	scanTitle.Position = UDim2.new(0, 10, 0, 10)
+	scanTitle.BackgroundTransparency = 1
+	scanTitle.Text = "SCANNER & INSPECTION TOOLS"
+	scanTitle.TextColor3 = Color3.fromRGB(80, 220, 120)
+	scanTitle.Font = Enum.Font.GothamBold
+	scanTitle.TextSize = 11.5
+	scanTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+	-- 1. Tombol Toggle Asset Inspector
+	local btnInsp, bgInsp, knobInsp, _ = BuatRowSaklar(pageScanner, 42, "Asset Inspector", "", false)
+	local inspectorActive = false
+	local mouse = player:GetMouse()
+	local inspectConn = nil
+	local lastDataString = ""
+
+	local inspectHighlighter = Instance.new("Highlight")
+	inspectHighlighter.FillColor = Color3.fromRGB(80, 240, 140)
+	inspectHighlighter.OutlineColor = Color3.fromRGB(255, 255, 255)
+	inspectHighlighter.FillTransparency = 0.4
+	inspectHighlighter.OutlineTransparency = 0
+
+	-- Panel Pop-Up Melayang Inspector (Draggable)
+	local popUpPanel = Instance.new("Frame", menuGui)
+	popUpPanel.Size = UDim2.new(0, 270, 0, 150)
+	popUpPanel.Position = UDim2.new(0.5, -135, 0.6, 0)
+	popUpPanel.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
+	popUpPanel.BackgroundTransparency = 0.05
+	popUpPanel.Visible = false
+	popUpPanel.ZIndex = 999999
+	Instance.new("UICorner", popUpPanel).CornerRadius = UDim.new(0, 8)
+	local popUpStroke = Instance.new("UIStroke", popUpPanel)
+	popUpStroke.Color = Color3.fromRGB(80, 220, 120)
+	popUpStroke.Thickness = 1.2
+
+	local popUpText = Instance.new("TextLabel", popUpPanel)
+	popUpText.Size = UDim2.new(1, -12, 0, 105)
+	popUpText.Position = UDim2.new(0, 6, 0, 4)
+	popUpText.BackgroundTransparency = 1
+	popUpText.TextColor3 = Color3.fromRGB(220, 220, 235)
+	popUpText.Font = Enum.Font.Gotham
+	popUpText.TextSize = 9
+	popUpText.TextXAlignment = Enum.TextXAlignment.Left
+	popUpText.TextYAlignment = Enum.TextYAlignment.Top
+	popUpText.TextWrapped = true
+	popUpText.ZIndex = 999999
+	popUpText.Text = "🔹 Nama: -\n📂 Path: -\n🆔 ID: -\n📍 Jarak: -\n⚙️️ Fisik: -"
+
+	local manualCopyBtn = Instance.new("TextButton", popUpPanel)
+	manualCopyBtn.Size = UDim2.new(1, -12, 0, 28)
+	manualCopyBtn.Position = UDim2.new(0, 6, 0, 114)
+	manualCopyBtn.BackgroundColor3 = Color3.fromRGB(20, 35, 25)
+	manualCopyBtn.Text = "📋 SALIN DATA INI"
+	manualCopyBtn.TextColor3 = Color3.fromRGB(120, 220, 150)
+	manualCopyBtn.Font = Enum.Font.GothamBold
+	manualCopyBtn.TextSize = 9
+	manualCopyBtn.ZIndex = 999999
+	Instance.new("UICorner", manualCopyBtn).CornerRadius = UDim.new(0, 5)
+	local copyStroke = Instance.new("UIStroke", manualCopyBtn)
+	copyStroke.Color = Color3.fromRGB(45, 90, 60)
+	copyStroke.Thickness = 1
+
+	-- Sistem Draggable Panel Pop-Up
+	local dragging, dragInput, dragStart, startPos
+	popUpPanel.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			dragging = true dragStart = input.Position startPos = popUpPanel.Position
+			input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end)
+		end
+	end)
+	popUpPanel.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then dragInput = input end
+	end)
+	UserInputService.InputChanged:Connect(function(input)
+		if input == dragInput and dragging then
+			local delta = input.Position - dragStart
+			popUpPanel.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		end
+	end)
+
+	local function GetObjectPath(obj)
+		local path = obj.Name
+		local current = obj.Parent
+		while current and current ~= game and current ~= workspace do
+			path = current.Name .. " > " .. path
+			current = current.Parent
+		end
+		if current == workspace then path = "workspace > " .. path end
+		return path
+	end
+
+	btnInsp.MouseButton1Click:Connect(function()
+		inspectorActive = not inspectorActive
+		AnimasiSaklar(inspectorActive, bgInsp, knobInsp)
+		
+		if inspectorActive then
+			TampilkanNotifikasiHijau("Asset Inspector Aktif!")
+			inspectConn = RunService.RenderStepped:Connect(function()
+				if inspectorActive then
+					local target = mouse.Target
+					local char = player.Character
+					local rootPart = char and char:FindFirstChild("HumanoidRootPart")
+					
+					if target and target:IsA("BasePart") then
+						local model = target.Parent
+						if model:IsA("Model") and model ~= workspace then inspectHighlighter.Adornee = model
+						else inspectHighlighter.Adornee = target end
+						inspectHighlighter.Parent = menuGui
+						
+						local objPath = GetObjectPath(target)
+						local assetId = target:IsA("MeshPart") and target.MeshId or (target:IsA("Decal") or target:IsA("Texture") and target.Texture or "Tidak ada (Part)")
+						local distanceStr = rootPart and (math.floor((rootPart.Position - target.Position).Magnitude * 10) / 10 .. " meter") or "N/A"
+						local collideStatus = target.CanCollide and "True" or "False"
+						local anchorStatus = target.Anchored and "True" or "False"
+						
+						popUpText.Text = "🔹 Nama: " .. target.Name .. " (" .. target.ClassName .. ")\n📂 Path: " .. objPath .. "\n🆔 ID: " .. assetId .. "\n📍 Jarak: " .. distanceStr .. "\n⚙️ Collide: " .. collideStatus .. " | Anchored: " .. anchorStatus
+						lastDataString = "Nama: " .. target.Name .. " | Class: " .. target.ClassName .. " | Path: " .. objPath .. " | ID: " .. assetId .. " | Collide: " .. collideStatus .. " | Anchored: " .. anchorStatus
+						popUpPanel.Visible = true
+					else
+						inspectHighlighter.Parent = nil
+						popUpPanel.Visible = false
+					end
+				end
+			end)
+		else
+			inspectHighlighter.Parent = nil
+			popUpPanel.Visible = false
+			if inspectConn then inspectConn:Disconnect() end
+			TampilkanNotifikasiHijau("Asset Inspector Mati.")
+		end
+	end)
+
+	manualCopyBtn.MouseButton1Click:Connect(function()
+		if lastDataString ~= "" and setclipboard then
+			setclipboard(lastDataString)
+			TampilkanNotifikasiHijau("Data Berhasil Disalin!")
+		end
+	end)
+
+	-- 2. X-Ray / Radius Scanner (Warna Hijau Emerald)
+	local scanRow = Instance.new("Frame", pageScanner)
+	scanRow.Size = UDim2.new(1, -20, 0, 35)
+	scanRow.Position = UDim2.new(0, 10, 0, 87)
+	scanRow.BackgroundTransparency = 1
+
+	local scanLabel = Instance.new("TextLabel", scanRow)
+	scanLabel.Size = UDim2.new(0.4, 0, 1, 0)
+	scanLabel.BackgroundTransparency = 1
+	scanLabel.Text = "X-Ray Scanner"
+	scanLabel.TextColor3 = Color3.fromRGB(210, 210, 220)
+	scanLabel.Font = Enum.Font.Gotham
+	scanLabel.TextSize = 12
+	scanLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+	local inputRadius = Instance.new("TextBox", scanRow)
+	inputRadius.Size = UDim2.new(0, 45, 0, 24)
+	inputRadius.Position = UDim2.new(1, -100, 0.5, -12)
+	inputRadius.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
+	inputRadius.TextColor3 = Color3.fromRGB(240, 240, 250)
+	inputRadius.Text = "30"
+	inputRadius.Font = Enum.Font.Gotham
+	inputRadius.TextSize = 11
+	Instance.new("UICorner", inputRadius).CornerRadius = UDim.new(0, 4)
+	Instance.new("UIStroke", inputRadius).Color = Color3.fromRGB(38, 38, 48)
+
+	local switchScanBg = Instance.new("Frame", scanRow)
+	switchScanBg.Size = UDim2.new(0, 40, 0, 20)
+	switchScanBg.Position = UDim2.new(1, -40, 0.5, -10)
+	switchScanBg.BackgroundColor3 = Color3.fromRGB(18, 18, 24) 
+	Instance.new("UICorner", switchScanBg).CornerRadius = UDim.new(1, 0)
+	Instance.new("UIStroke", switchScanBg).Color = Color3.fromRGB(40, 40, 52)
+
+	local knobScan = Instance.new("Frame", switchScanBg)
+	knobScan.Size = UDim2.new(0, 14, 0, 14)
+	knobScan.Position = UDim2.new(0, 3, 0.5, -7) 
+	knobScan.BackgroundColor3 = Color3.fromRGB(140, 140, 155)
+	Instance.new("UICorner", knobScan).CornerRadius = UDim.new(1, 0)
+
+	local btnScan = Instance.new("TextButton", switchScanBg)
+	btnScan.Size = UDim2.new(1, 0, 1, 0)
+	btnScan.BackgroundTransparency = 1
+	btnScan.Text = ""
+
+	local scannerActive = false
+	local scanHighlights = {}
+	local function ClearScanHighlights()
+		for _, h in pairs(scanHighlights) do
+			if h then h:Destroy() end
+		end
+		scanHighlights = {}
+	end
+
+	btnScan.MouseButton1Click:Connect(function()
+		scannerActive = not scannerActive
+		TweenService:Create(switchScanBg, TweenInfo.new(0.25), {BackgroundColor3 = scannerActive and warnaBgOn or warnaBgOff}):Play()
+		TweenService:Create(knobScan, TweenInfo.new(0.25), {Position = scannerActive and posKnobOn or posKnobOff, BackgroundColor3 = scannerActive and warnaKnobOn or warnaKnobOff}):Play()
+		
+		if scannerActive then
+			TampilkanNotifikasiHijau("X-Ray Radius Scanner Aktif!")
+			task.spawn(function()
+				while scannerActive do
+					pcall(function()
+						local char = player.Character
+						local rootPart = char and char:FindFirstChild("HumanoidRootPart")
+						local maxDist = tonumber(inputRadius.Text) or 30
+						
+						if rootPart then
+							ClearScanHighlights()
+							local count = 0
+							for _, obj in pairs(workspace:GetDescendants()) do
+								if obj:IsA("BasePart") and obj.Name ~= "HumanoidRootPart" then
+									local dist = (rootPart.Position - obj.Position).Magnitude
+									if dist <= maxDist then
+										count = count + 1
+										if count > 80 then break end
+										
+										local hl = Instance.new("Highlight")
+										hl.FillColor = Color3.fromRGB(40, 200, 120)
+										hl.OutlineColor = Color3.fromRGB(180, 255, 210)
+										hl.FillTransparency = 0.65
+										hl.OutlineTransparency = 0.3
+										
+										local model = obj.Parent
+										if model:IsA("Model") and model ~= workspace then
+											hl.Adornee = model
+										else
+											hl.Adornee = obj
+										end
+										
+										hl.Parent = menuGui
+										table.insert(scanHighlights, hl)
+									end
+								end
+							end
+						end
+					end)
+					task.wait(2)
+				end
+			end)
+		else
+			scannerActive = false
+			ClearScanHighlights()
+			TampilkanNotifikasiHijau("X-Ray Radius Scanner Mati.")
+		end
+	end)
+
+	-- ==========================================
+	-- TAB 5: MOUNT
 	-- ==========================================
 	local listCheckpoint = {
 		{nama = "Checkpoint 1", pos = Vector3.new(821.59, 29.54, 85.44)},
@@ -1484,7 +1742,7 @@ local function BukaMenuUtamaUltimate()
 	end)
 
 	-- ==========================================
-	-- TAB 5: TROLL (FLING YIELD, SPINBOT, SHAKE)
+	-- TAB 6: TROLL
 	-- ==========================================
 	local trollTitle = Instance.new("TextLabel", pageTroll)
 	trollTitle.Size = UDim2.new(1, -20, 0, 25)
@@ -1496,7 +1754,6 @@ local function BukaMenuUtamaUltimate()
 	trollTitle.TextSize = 12
 	trollTitle.TextXAlignment = Enum.TextXAlignment.Left
 
-	-- Spinbot
 	local btnSpin, bgSpin, knobSpin, _ = BuatRowSaklar(pageTroll, 40, "Spinbot Troll", "", false)
 	local spinOn = false
 	local spinConnection
@@ -1520,7 +1777,6 @@ local function BukaMenuUtamaUltimate()
 		end
 	end)
 
-	-- Fling Target ala Infinite Yield
 	local flingTargetRow = Instance.new("Frame", pageTroll)
 	flingTargetRow.Size = UDim2.new(1, -20, 0, 48)
 	flingTargetRow.Position = UDim2.new(0, 10, 0, 85)
@@ -1593,7 +1849,6 @@ local function BukaMenuUtamaUltimate()
 		end)
 	end)
 
-	-- Earthquake Camera
 	local shakeRow = Instance.new("Frame", pageTroll)
 	shakeRow.Size = UDim2.new(1, -20, 0, 35)
 	shakeRow.Position = UDim2.new(0, 10, 0, 145)
@@ -1648,7 +1903,7 @@ local function BukaMenuUtamaUltimate()
 	end)
 
 	-- ==========================================
-	-- TAB 6: SETTINGS
+	-- TAB 7: SETTINGS
 	-- ==========================================
 	local btnAntiAfk, bgAntiAfk, knobAntiAfk, _ = BuatRowSaklar(pagePerf, 15, "Anti-AFK", "", false)
 	local btnAntiLag, bgAntiLag, knobAntiLag, _ = BuatRowSaklar(pagePerf, 60, "Anti-Lag", "", false)
@@ -1843,27 +2098,29 @@ local function BukaMenuUtamaUltimate()
 	end)
 
 	-- ==========================================
-	-- TAB SWITCHING SYSTEM
+	-- TAB SWITCHING SYSTEM (7 TAB)
 	-- ==========================================
-	local function GantiTab(aktif, p1, p2, p3, p4, p5, p6)
-		p1.Visible = true p2.Visible = false p3.Visible = false p4.Visible = false p5.Visible = false p6.Visible = false
-		btnTabVip.BackgroundColor3    = Color3.fromRGB(11, 11, 15) btnTabVip.TextColor3    = Color3.fromRGB(140, 140, 155)
-		btnTabPlayer.BackgroundColor3 = Color3.fromRGB(11, 11, 15) btnTabPlayer.TextColor3 = Color3.fromRGB(140, 140, 155)
-		btnTabVisual.BackgroundColor3 = Color3.fromRGB(11, 11, 15) btnTabVisual.TextColor3 = Color3.fromRGB(140, 140, 155)
-		btnTabMount.BackgroundColor3  = Color3.fromRGB(11, 11, 15) btnTabMount.TextColor3  = Color3.fromRGB(140, 140, 155)
-		btnTabTroll.BackgroundColor3  = Color3.fromRGB(11, 11, 15) btnTabTroll.TextColor3  = Color3.fromRGB(140, 140, 155)
-		btnTabPerf.BackgroundColor3   = Color3.fromRGB(11, 11, 15) btnTabPerf.TextColor3   = Color3.fromRGB(140, 140, 155)
+	local function GantiTab(aktif, p1, p2, p3, p4, p5, p6, p7)
+		p1.Visible = true p2.Visible = false p3.Visible = false p4.Visible = false p5.Visible = false p6.Visible = false p7.Visible = false
+		btnTabVip.BackgroundColor3     = Color3.fromRGB(11, 11, 15) btnTabVip.TextColor3     = Color3.fromRGB(140, 140, 155)
+		btnTabPlayer.BackgroundColor3  = Color3.fromRGB(11, 11, 15) btnTabPlayer.TextColor3  = Color3.fromRGB(140, 140, 155)
+		btnTabVisual.BackgroundColor3  = Color3.fromRGB(11, 11, 15) btnTabVisual.TextColor3  = Color3.fromRGB(140, 140, 155)
+		btnTabScanner.BackgroundColor3 = Color3.fromRGB(11, 11, 15) btnTabScanner.TextColor3 = Color3.fromRGB(140, 140, 155)
+		btnTabMount.BackgroundColor3   = Color3.fromRGB(11, 11, 15) btnTabMount.TextColor3   = Color3.fromRGB(140, 140, 155)
+		btnTabTroll.BackgroundColor3   = Color3.fromRGB(11, 11, 15) btnTabTroll.TextColor3   = Color3.fromRGB(140, 140, 155)
+		btnTabPerf.BackgroundColor3    = Color3.fromRGB(11, 11, 15) btnTabPerf.TextColor3    = Color3.fromRGB(140, 140, 155)
 		
 		aktif.BackgroundColor3 = Color3.fromRGB(18, 18, 25)
 		aktif.TextColor3 = Color3.fromRGB(245, 245, 250)
 	end
 
-	btnTabVip.MouseButton1Click:Connect(function()    GantiTab(btnTabVip, pageVip, pagePlayer, pageVisual, pageMount, pageTroll, pagePerf) end)
-	btnTabPlayer.MouseButton1Click:Connect(function() GantiTab(btnTabPlayer, pagePlayer, pageVip, pageVisual, pageMount, pageTroll, pagePerf) end)
-	btnTabVisual.MouseButton1Click:Connect(function() GantiTab(btnTabVisual, pageVisual, pageVip, pagePlayer, pageMount, pageTroll, pagePerf) end)
-	btnTabMount.MouseButton1Click:Connect(function()  GantiTab(btnTabMount, pageMount, pageVip, pagePlayer, pageVisual, pageTroll, pagePerf) end)
-	btnTabTroll.MouseButton1Click:Connect(function()  GantiTab(btnTabTroll, pageTroll, pageVip, pagePlayer, pageVisual, pageMount, pagePerf) end)
-	btnTabPerf.MouseButton1Click:Connect(function()   GantiTab(btnTabPerf, pagePerf, pageVip, pagePlayer, pageVisual, pageMount, pageTroll) end)
+	btnTabVip.MouseButton1Click:Connect(function()     GantiTab(btnTabVip, pageVip, pagePlayer, pageVisual, pageScanner, pageMount, pageTroll, pagePerf) end)
+	btnTabPlayer.MouseButton1Click:Connect(function()  GantiTab(btnTabPlayer, pagePlayer, pageVip, pageVisual, pageScanner, pageMount, pageTroll, pagePerf) end)
+	btnTabVisual.MouseButton1Click:Connect(function()  GantiTab(btnTabVisual, pageVisual, pageVip, pagePlayer, pageScanner, pageMount, pageTroll, pagePerf) end)
+	btnTabScanner.MouseButton1Click:Connect(function() GantiTab(btnTabScanner, pageScanner, pageVip, pagePlayer, pageVisual, pageMount, pageTroll, pagePerf) end)
+	btnTabMount.MouseButton1Click:Connect(function()   GantiTab(btnTabMount, pageMount, pageVip, pagePlayer, pageVisual, pageScanner, pageTroll, pagePerf) end)
+	btnTabTroll.MouseButton1Click:Connect(function()   GantiTab(btnTabTroll, pageTroll, pageVip, pagePlayer, pageVisual, pageScanner, pageMount, pagePerf) end)
+	btnTabPerf.MouseButton1Click:Connect(function()    GantiTab(btnTabPerf, pagePerf, pageVip, pagePlayer, pageVisual, pageScanner, pageMount, pageTroll) end)
 
 	btnMax.MouseButton1Click:Connect(function()
 		isFullScreen = not isFullScreen
