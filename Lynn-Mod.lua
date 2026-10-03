@@ -1,5 +1,5 @@
 -- ==========================================
--- LYNN MOD MENU - DARK VOID (MAIN FRAME // MODULAR VERSION)
+-- LYNN MOD MENU - DARK VOID (MODULAR TEMPLATE)
 -- ==========================================
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
@@ -137,7 +137,7 @@ btnLoginStroke.Color = Color3.fromRGB(60, 60, 75)
 btnLoginStroke.Thickness = 1.2
 
 -- ==========================================
--- MENU UTAMA ULTIMATE (KERANGKA MODULAR)
+-- MENU UTAMA ULTIMATE (MODULAR SYSTEM)
 -- ==========================================
 local function BukaMenuUtamaUltimate()
 	local isFullScreen = false 
@@ -360,7 +360,7 @@ local function BukaMenuUtamaUltimate()
 	garisJudul.BackgroundColor3 = Color3.fromRGB(25, 25, 32)
 	garisJudul.BorderSizePixel = 0
 
-	-- 7 HALAMAN / PAGES KOSONG (Wadah Fitur Eksternal Nanti)
+	-- 7 HALAMAN / PAGES KOSONG
 	local pageVip = Instance.new("ScrollingFrame", mainFrame)
 	pageVip.Size = UDim2.new(1, -130, 1, -45)
 	pageVip.Position = UDim2.new(0, 130, 0, 45)
@@ -417,7 +417,6 @@ local function BukaMenuUtamaUltimate()
 	pagePerf.CanvasSize = UDim2.new(0, 0, 2, 0)
 	pagePerf.ScrollBarThickness = 3
 
-	-- SISTEM PENGALIH TAB (TAB SWITCHING)
 	local function GantiTab(aktif, p1, p2, p3, p4, p5, p6, p7)
 		p1.Visible = true p2.Visible = false p3.Visible = false p4.Visible = false p5.Visible = false p6.Visible = false p7.Visible = false
 		btnTabVip.BackgroundColor3     = Color3.fromRGB(11, 11, 15) btnTabVip.TextColor3     = Color3.fromRGB(140, 140, 155)
@@ -432,40 +431,172 @@ local function BukaMenuUtamaUltimate()
 		aktif.TextColor3 = Color3.fromRGB(245, 245, 250)
 	end
 
-	-- EVENT LISTENER KLIK TAB (Tempat nanti kita pasang fungsi loadstring URL)
+	-- ==========================================
+	-- TAB 1: VIP (Contoh Link URL dimasukkan di sini)
+	-- ==========================================
 	btnTabVip.MouseButton1Click:Connect(function()     
 		GantiTab(btnTabVip, pageVip, pagePlayer, pageVisual, pageScanner, pageMount, pageTroll, pagePerf) 
-		-- Nanti kita isi loadstring VIP di sini
+		
+		if not pageVip:FindFirstChild("IsLoaded") then
+			local marker = Instance.new("Folder", pageVip)
+			marker.Name = "IsLoaded"
+			marker.Parent = pageVip
+			
+			task.spawn(function()
+				local success, err = pcall(function()
+					-- 👇 GANTI LINK DI BAWAH INI DENGAN LINK RAW GITHUB VIP LU 👇
+					local rawUrl = "https://raw.githubusercontent.com/ahmadrio0703-web/script/refs/heads/main/vip.lua"
+					loadstring(game:HttpGet(rawUrl))(pageVip, menuGui)
+				end)
+				if not success then
+					warn("Gagal memuat Tab VIP: " .. tostring(err))
+				end
+			end)
+		end
 	end)
-	
+
+	-- ==========================================
+	-- TAB 2: PLAYER (Contoh Link URL)
+	-- ==========================================
 	btnTabPlayer.MouseButton1Click:Connect(function()  
 		GantiTab(btnTabPlayer, pagePlayer, pageVip, pageVisual, pageScanner, pageMount, pageTroll, pagePerf) 
-		-- Nanti kita isi loadstring Player di sini
+		
+		if not pagePlayer:FindFirstChild("IsLoaded") then
+			local marker = Instance.new("Folder", pagePlayer)
+			marker.Name = "IsLoaded"
+			marker.Parent = pagePlayer
+			
+			task.spawn(function()
+				local success, err = pcall(function()
+					-- 👇 GANTI LINK DI BAWAH INI DENGAN LINK RAW GITHUB PLAYER LU 👇
+					local rawUrl = "https://raw.githubusercontent.com/usernamekamu/repo/main/player.lua"
+					loadstring(game:HttpGet(rawUrl))(pagePlayer, menuGui)
+				end)
+				if not success then
+					warn("Gagal memuat Tab Player: " .. tostring(err))
+				end
+			end)
+		end
 	end)
-	
+
+	-- ==========================================
+	-- TAB 3: VISUALS (Contoh Link URL)
+	-- ==========================================
 	btnTabVisual.MouseButton1Click:Connect(function()  
 		GantiTab(btnTabVisual, pageVisual, pageVip, pagePlayer, pageScanner, pageMount, pageTroll, pagePerf) 
-		-- Nanti kita isi loadstring Visuals di sini
+		
+		if not pageVisual:FindFirstChild("IsLoaded") then
+			local marker = Instance.new("Folder", pageVisual)
+			marker.Name = "IsLoaded"
+			marker.Parent = pageVisual
+			
+			task.spawn(function()
+				local success, err = pcall(function()
+					-- 👇 GANTI LINK DI BAWAH INI DENGAN LINK RAW GITHUB VISUALS LU 👇
+					local rawUrl = "https://raw.githubusercontent.com/usernamekamu/repo/main/visuals.lua"
+					loadstring(game:HttpGet(rawUrl))(pageVisual, menuGui)
+				end)
+				if not success then
+					warn("Gagal memuat Tab Visuals: " .. tostring(err))
+				end
+			end)
+		end
 	end)
-	
+
+	-- ==========================================
+	-- TAB 4: SCANNER (Contoh Link URL)
+	-- ==========================================
 	btnTabScanner.MouseButton1Click:Connect(function() 
 		GantiTab(btnTabScanner, pageScanner, pageVip, pagePlayer, pageVisual, pageMount, pageTroll, pagePerf) 
-		-- Nanti kita isi loadstring Scanner di sini
+		
+		if not pageScanner:FindFirstChild("IsLoaded") then
+			local marker = Instance.new("Folder", pageScanner)
+			marker.Name = "IsLoaded"
+			marker.Parent = pageScanner
+			
+			task.spawn(function()
+				local success, err = pcall(function()
+					-- 👇 GANTI LINK DI BAWAH INI DENGAN LINK RAW GITHUB SCANNER LU 👇
+					local rawUrl = "https://raw.githubusercontent.com/usernamekamu/repo/main/scanner.lua"
+					loadstring(game:HttpGet(rawUrl))(pageScanner, menuGui)
+				end)
+				if not success then
+					warn("Gagal memuat Tab Scanner: " .. tostring(err))
+				end
+			end)
+		end
 	end)
-	
+
+	-- ==========================================
+	-- TAB 5: MOUNT (Contoh Link URL)
+	-- ==========================================
 	btnTabMount.MouseButton1Click:Connect(function()   
 		GantiTab(btnTabMount, pageMount, pageVip, pagePlayer, pageVisual, pageScanner, pageTroll, pagePerf) 
-		-- Nanti kita isi loadstring Mount di sini
+		
+		if not pageMount:FindFirstChild("IsLoaded") then
+			local marker = Instance.new("Folder", pageMount)
+			marker.Name = "IsLoaded"
+			marker.Parent = pageMount
+			
+			task.spawn(function()
+				local success, err = pcall(function()
+					-- 👇 GANTI LINK DI BAWAH INI DENGAN LINK RAW GITHUB MOUNT LU 👇
+					local rawUrl = "https://raw.githubusercontent.com/usernamekamu/repo/main/mount.lua"
+					loadstring(game:HttpGet(rawUrl))(pageMount, menuGui)
+				end)
+				if not success then
+					warn("Gagal memuat Tab Mount: " .. tostring(err))
+				end
+			end)
+		end
 	end)
-	
+
+	-- ==========================================
+	-- TAB 6: TROLL (Contoh Link URL)
+	-- ==========================================
 	btnTabTroll.MouseButton1Click:Connect(function()   
 		GantiTab(btnTabTroll, pageTroll, pageVip, pagePlayer, pageVisual, pageScanner, pageMount, pagePerf) 
-		-- Nanti kita isi loadstring Troll di sini
+		
+		if not pageTroll:FindFirstChild("IsLoaded") then
+			local marker = Instance.new("Folder", pageTroll)
+			marker.Name = "IsLoaded"
+			marker.Parent = pageTroll
+			
+			task.spawn(function()
+				local success, err = pcall(function()
+					-- 👇 GANTI LINK DI BAWAH INI DENGAN LINK RAW GITHUB TROLL LU 👇
+					local rawUrl = "https://raw.githubusercontent.com/usernamekamu/repo/main/troll.lua"
+					loadstring(game:HttpGet(rawUrl))(pageTroll, menuGui)
+				end)
+				if not success then
+					warn("Gagal memuat Tab Troll: " .. tostring(err))
+				end
+			end)
+		end
 	end)
-	
+
+	-- ==========================================
+	-- TAB 7: SETTINGS (Contoh Link URL)
+	-- ==========================================
 	btnTabPerf.MouseButton1Click:Connect(function()    
 		GantiTab(btnTabPerf, pagePerf, pageVip, pagePlayer, pageVisual, pageScanner, pageMount, pageTroll) 
-		-- Nanti kita isi loadstring Settings di sini
+		
+		if not pagePerf:FindFirstChild("IsLoaded") then
+			local marker = Instance.new("Folder", pagePerf)
+			marker.Name = "IsLoaded"
+			marker.Parent = pagePerf
+			
+			task.spawn(function()
+				local success, err = pcall(function()
+					-- 👇 GANTI LINK DI BAWAH INI DENGAN LINK RAW GITHUB SETTINGS LU 👇
+					local rawUrl = "https://raw.githubusercontent.com/usernamekamu/repo/main/settings.lua"
+					loadstring(game:HttpGet(rawUrl))(pagePerf, menuGui)
+				end)
+				if not success then
+					warn("Gagal memuat Tab Settings: " .. tostring(err))
+				end
+			end)
+		end
 	end)
 
 	btnMax.MouseButton1Click:Connect(function()
