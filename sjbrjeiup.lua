@@ -1,5 +1,5 @@
 -- ==========================================
--- LYNN MOD MENU - DARK VOID (VIP TELEKINESIS ADDED)
+-- LYNN MOD MENU - DARK VOID (FINAL INTEGRATED)
 -- ==========================================
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
@@ -426,7 +426,7 @@ local function BukaMenuUtamaUltimate()
 	pageVip.Position = UDim2.new(0, 130, 0, 45)
 	pageVip.BackgroundTransparency = 1
 	pageVip.Visible = false
-	pageVip.CanvasSize = UDim2.new(0, 0, 3.5, 0)
+	pageVip.CanvasSize = UDim2.new(0, 0, 3.8, 0)
 	pageVip.ScrollBarThickness = 3
 
 	local pagePlayer = Instance.new("ScrollingFrame", mainFrame)
@@ -521,7 +521,7 @@ local function BukaMenuUtamaUltimate()
 		return btn, switchBg, knob, inputBox
 	end
 
-	-- TAB 1: VIP (FAST TAP, BOT REPLAY, & SERVER SCAN)
+	-- TAB 1: VIP (FAST TAP, BOT REPLAY, TELEKINESIS, & SERVER SCAN)
 	local databaseVip = {
 		["Lyosh71"] = true,
 		["gantung300"] = true,
@@ -721,63 +721,23 @@ local function BukaMenuUtamaUltimate()
 		Instance.new("UICorner", btnImportReplay).CornerRadius = UDim.new(0, 5)
 		Instance.new("UIStroke", btnImportReplay).Color = Color3.fromRGB(40, 40, 52)
 
-		-- FITUR SCAN SERVER SEPI DI TAB VIP (POSISI DIDALAM HALAMAN VIP)
-		local scanServerRow = Instance.new("Frame", pageVip)
-		scanServerRow.Size = UDim2.new(1, -20, 0, 35)
-		scanServerRow.Position = UDim2.new(0, 10, 0, 315)
-		scanServerRow.BackgroundTransparency = 1
-
-		local scanServerBtn = Instance.new("TextButton", scanServerRow)
-		scanServerBtn.Size = UDim2.new(1, 0, 1, 0)
-		scanServerBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
-		scanServerBtn.TextColor3 = Color3.fromRGB(210, 210, 220)
-		scanServerBtn.TextSize = 11
-		scanServerBtn.Font = Enum.Font.GothamBold
-		scanServerBtn.Text = "SCAN SERVER SEPI"
-		Instance.new("UICorner", scanServerBtn).CornerRadius = UDim.new(0, 6)
-		local scanBtnStroke = Instance.new("UIStroke", scanServerBtn)
-		scanBtnStroke.Color = Color3.fromRGB(45, 45, 58)
-		scanBtnStroke.Thickness = 1.2
-
-		-- Container List Pilihan Server (Muncul langsung di bawah tombol scan di dalam tab VIP)
-		local listContainer = Instance.new("Frame", pageVip)
-		listContainer.Size = UDim2.new(1, -20, 0, 140)
-		listContainer.Position = UDim2.new(0, 10, 0, 358)
-		listContainer.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
-		listContainer.BorderSizePixel = 0
-		listContainer.Visible = false
-		Instance.new("UICorner", listContainer).CornerRadius = UDim.new(0, 6)
-		Instance.new("UIStroke", listContainer).Color = Color3.fromRGB(40, 40, 52)
-
-		local listScroll = Instance.new("ScrollingFrame", listContainer)
-		listScroll.Size = UDim2.new(1, -6, 1, -6)
-		listScroll.Position = UDim2.new(0, 3, 0, 3)
-		listScroll.BackgroundTransparency = 1
-		listScroll.BorderSizePixel = 0
-		listScroll.ScrollBarThickness = 3
-		listScroll.CanvasSize = UDim2.new(0, 0, 2, 0)
-
-		local listLayout = Instance.new("UIListLayout", listScroll)
-		listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-		listLayout.Padding = UDim.new(0, 4)
-
 		-- FITUR TELEKINESIS (VIP EXCLUSIVE)
 		local telekinesisRow = Instance.new("Frame", pageVip)
-		telekinesisRow.Size = UDim2.new(1, -20, 0, 35)
-		telekinesisRow.Position = UDim2.new(0, 10, 0, 515) -- Posisinya tepat di bawah list dropdown scan server
+		telekinesisRow.Size = UDim2.new(1, -20, 0, 32)
+		telekinesisRow.Position = UDim2.new(0, 10, 0, 315) 
 		telekinesisRow.BackgroundTransparency = 1
 
 		local telekinesisBtn = Instance.new("TextButton", telekinesisRow)
 		telekinesisBtn.Size = UDim2.new(1, 0, 1, 0)
 		telekinesisBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
-		telekinesisBtn.TextColor3 = Color3.fromRGB(210, 210, 220)
-		telekinesisBtn.TextSize = 11
+		telekinesisBtn.TextColor3 = Color3.fromRGB(200, 200, 215)
+		telekinesisBtn.TextSize = 10
 		telekinesisBtn.Font = Enum.Font.GothamBold
 		telekinesisBtn.Text = "ACTIVATE TELEKINESIS (V2)"
-		Instance.new("UICorner", telekinesisBtn).CornerRadius = UDim.new(0, 6)
+		Instance.new("UICorner", telekinesisBtn).CornerRadius = UDim.new(1, 0) -- Slim Pill Shape
 		local teleBtnStroke = Instance.new("UIStroke", telekinesisBtn)
-		teleBtnStroke.Color = Color3.fromRGB(45, 45, 58)
-		teleBtnStroke.Thickness = 1.2
+		teleBtnStroke.Color = Color3.fromRGB(55, 55, 75)
+		teleBtnStroke.Thickness = 1
 
 		telekinesisBtn.MouseButton1Click:Connect(function()
 			pcall(function()
@@ -796,12 +756,54 @@ local function BukaMenuUtamaUltimate()
 						TampilkanNotifikasiHijau("Telekinesis V2 Berhasil Dieksekusi!")
 					else
 						telekinesisBtn.Text = "ACTIVATE TELEKINESIS (V2)"
-						telekinesisBtn.TextColor3 = Color3.fromRGB(210, 210, 220)
+						telekinesisBtn.TextColor3 = Color3.fromRGB(200, 200, 215)
 						TampilkanNotifikasiHijau("Gagal! Link mati atau terblokir.")
 					end
 				end)
 			end)
 		end)
+
+		-- FITUR SCAN SERVER SEPI DI TAB VIP (POSISI PALING BAWAH SESUDAH TELEKINESIS)
+		local scanServerRow = Instance.new("Frame", pageVip)
+		scanServerRow.Size = UDim2.new(1, -20, 0, 32)
+		scanServerRow.Position = UDim2.new(0, 10, 0, 357)
+		scanServerRow.BackgroundTransparency = 1
+
+		local scanServerBtn = Instance.new("TextButton", scanServerRow)
+		scanServerBtn.Size = UDim2.new(1, 0, 1, 0)
+		scanServerBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
+		scanServerBtn.TextColor3 = Color3.fromRGB(200, 200, 215)
+		scanServerBtn.TextSize = 10
+		scanServerBtn.Font = Enum.Font.GothamBold
+		scanServerBtn.Text = "SCAN SERVER SEPI"
+		Instance.new("UICorner", scanServerBtn).CornerRadius = UDim.new(1, 0) -- Slim Pill Shape
+		local scanBtnStroke = Instance.new("UIStroke", scanServerBtn)
+		scanBtnStroke.Color = Color3.fromRGB(55, 55, 75)
+		scanBtnStroke.Thickness = 1
+
+		-- Container List Pilihan Server (Muncul langsung di bawah tombol scan di dalam tab VIP)
+		local listContainer = Instance.new("Frame", pageVip)
+		listContainer.Size = UDim2.new(1, -20, 0, 140)
+		listContainer.Position = UDim2.new(0, 10, 0, 396)
+		listContainer.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
+		listContainer.BorderSizePixel = 0
+		listContainer.Visible = false
+		Instance.new("UICorner", listContainer).CornerRadius = UDim.new(0, 8)
+		local listStroke = Instance.new("UIStroke", listContainer)
+		listStroke.Color = Color3.fromRGB(45, 45, 60)
+		listStroke.Thickness = 1.2
+
+		local listScroll = Instance.new("ScrollingFrame", listContainer)
+		listScroll.Size = UDim2.new(1, -6, 1, -6)
+		listScroll.Position = UDim2.new(0, 3, 0, 3)
+		listScroll.BackgroundTransparency = 1
+		listScroll.BorderSizePixel = 0
+		listScroll.ScrollBarThickness = 3
+		listScroll.CanvasSize = UDim2.new(0, 0, 2, 0)
+
+		local listLayout = Instance.new("UIListLayout", listScroll)
+		listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+		listLayout.Padding = UDim.new(0, 4)
 
 		local function AddServerOption(text, jobId)
 			local optBtn = Instance.new("TextButton", listScroll)
@@ -829,6 +831,7 @@ local function BukaMenuUtamaUltimate()
 			end
 			
 			scanServerBtn.Text = "SCANNING..."
+			scanServerBtn.TextColor3 = Color3.fromRGB(80, 220, 120) -- Berubah menjadi hijau saat dipencet
 			
 			task.spawn(function()
 				pcall(function()
@@ -850,6 +853,7 @@ local function BukaMenuUtamaUltimate()
 				end)
 				
 				scanServerBtn.Text = "SCAN SERVER SEPI"
+				scanServerBtn.TextColor3 = Color3.fromRGB(200, 200, 215) -- Kembali ke warna normal
 				listContainer.Visible = not listContainer.Visible
 			end)
 		end)
