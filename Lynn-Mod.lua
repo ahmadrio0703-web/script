@@ -1,5 +1,5 @@
 -- ==========================================
--- LYNN MOD MENU - DARK VOID (SMOOTH & LOADING OVERLAY)
+-- LYNN MOD MENU - DARK VOID (STABLE & SMOOTH)
 -- ==========================================
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
@@ -71,20 +71,16 @@ local function TampilkanNotifikasiHijau(pesan)
 end
 
 -- ==========================================
--- LOGIN SCREEN (SMOOTH ANIMATION)
+-- LOGIN SCREEN (STABLE VERSION)
 -- ==========================================
 local loginFrame = Instance.new("Frame", menuGui)
-loginFrame.Size = UDim2.new(0, 0, 0, 0)
+loginFrame.Size = UDim2.new(0, 320, 0, 180)
 loginFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 loginFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 loginFrame.BackgroundColor3 = Color3.fromRGB(9, 9, 13)
 loginFrame.BorderSizePixel = 0
 loginFrame.ZIndex = 888888
 Instance.new("UICorner", loginFrame).CornerRadius = UDim.new(0, 12)
-
-TweenService:Create(loginFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-	Size = UDim2.new(0, 320, 0, 180)
-}):Play()
 
 local loginStroke = Instance.new("UIStroke", loginFrame)
 loginStroke.Color = Color3.fromRGB(45, 45, 60)
@@ -141,7 +137,7 @@ btnLoginStroke.Color = Color3.fromRGB(60, 60, 75)
 btnLoginStroke.Thickness = 1.2
 
 -- ==========================================
--- MENU UTAMA ULTIMATE (SMOOTH & MODULAR)
+-- MENU UTAMA ULTIMATE (MODULAR SYSTEM)
 -- ==========================================
 local function BukaMenuUtamaUltimate()
 	local isFullScreen = false 
@@ -182,7 +178,7 @@ local function BukaMenuUtamaUltimate()
 
 	-- MAIN FRAME
 	local mainFrame = Instance.new("Frame")
-	mainFrame.Size = UDim2.new(0, 0, 0, 0)
+	mainFrame.Size = UDim2.new(0, 480, 0, 270)
 	mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 	mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 	mainFrame.BackgroundColor3 = Color3.fromRGB(8, 8, 11) 
@@ -194,11 +190,6 @@ local function BukaMenuUtamaUltimate()
 	mainStroke.Color = Color3.fromRGB(38, 38, 48)
 	mainStroke.Thickness = 1.2
 	BuatBisaDigeser(mainFrame) 
-
-	-- Animasi buka main frame smooth
-	TweenService:Create(mainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
-		Size = UDim2.new(0, 480, 0, 270)
-	}):Play()
 
 	local btnTutup = Instance.new("TextButton", mainFrame)
 	btnTutup.Size = UDim2.new(0, 24, 0, 24)
@@ -426,9 +417,7 @@ local function BukaMenuUtamaUltimate()
 	pagePerf.CanvasSize = UDim2.new(0, 0, 2, 0)
 	pagePerf.ScrollBarThickness = 3
 
-	-- ==========================================
-	-- LOADING OVERLAY (EFEK KERTAS / KOTAK PEMBUAT LOADING DI TIAP TAB)
-	-- ==========================================
+	-- LOADING OVERLAY
 	local loadingOverlay = Instance.new("Frame", mainFrame)
 	loadingOverlay.Size = UDim2.new(1, -130, 1, -45)
 	loadingOverlay.Position = UDim2.new(0, 130, 0, 45)
@@ -461,10 +450,8 @@ local function BukaMenuUtamaUltimate()
 		aktif.TextColor3 = Color3.fromRGB(245, 245, 250)
 	end
 
-	-- FUNGSI MODULAR LOADER DENGAN LOADING OVERLAY & EFEK SMOOTH
 	local function LoadTabContent(pageTarget, rawUrl, namaTab)
 		GantiTab(
-			-- Menyesuaikan tombol aktif berdasarkan halaman
 			pageTarget == pageVip and btnTabVip or
 			pageTarget == pagePlayer and btnTabPlayer or
 			pageTarget == pageVisual and btnTabVisual or
@@ -475,16 +462,14 @@ local function BukaMenuUtamaUltimate()
 		)
 
 		if not pageTarget:FindFirstChild("IsLoaded") then
-			-- Tampilkan overlay loading melayang di atas tab
 			loadingOverlay.Visible = true
-			loadingText.Text = "⏳ Menghubungkan ke server (" .. namaTab.
-				.. ")..."
+			loadingText.Text = "⏳ Menghubungkan (" .. namaTab .. ")..."
 
 			task.spawn(function()
 				local success, err = pcall(function()
 					local code = game:HttpGet(rawUrl)
 					loadingText.Text = "⚡ Memproses modul..."
-					task.wait(0.1) -- Efek transisi smooth sebentar
+					task.wait(0.1)
 					loadstring(code)(pageTarget, menuGui)
 
 					local marker = Instance.new("Folder", pageTarget)
@@ -497,53 +482,39 @@ local function BukaMenuUtamaUltimate()
 					TampilkanNotifikasiHijau("⚠️ Gagal memuat " .. namaTab)
 				end
 
-				-- Hilangkan overlay loading dengan transisi smooth fade out
-				TweenService:Create(loadingOverlay, TweenInfo.new(0.2), {
-					BackgroundTransparency = 1
-				}):Play()
-				TweenService:Create(loadingText, TweenInfo.new(0.2), {
-					TextTransparency = 1
-				}):Play()
-				task.wait(0.2)
 				loadingOverlay.Visible = false
-				loadingOverlay.BackgroundTransparency = 0.3
-				loadingText.TextTransparency = 0
 			end)
 		else
-			-- Kalau sudah pernah di-load sebelumnya, langsung mulus tanpa loading lagi
 			loadingOverlay.Visible = false
 		end
 	end
 
-	-- ==========================================
-	-- EVENT KLIK TAB (MENGGUNAKAN LOADER + OVERLAY)
-	-- ==========================================
 	btnTabVip.MouseButton1Click:Connect(function()     
 		LoadTabContent(pageVip, "https://raw.githubusercontent.com/ahmadrio0703-web/script/refs/heads/main/vip.lua", "VIP")
 	end)
 
 	btnTabPlayer.MouseButton1Click:Connect(function()  
-		LoadTabContent(pagePlayer, "https://github.com/ahmadrio0703-web/script/raw/refs/heads/main/player.lua", "Player")
+		LoadTabContent(pagePlayer, "https://raw.githubusercontent.com/ahmadrio0703-web/script/refs/heads/main/player.lua", "Player")
 	end)
 
 	btnTabVisual.MouseButton1Click:Connect(function()  
-		LoadTabContent(pageVisual, "https://github.com/ahmadrio0703-web/script/raw/refs/heads/main/visual.lua", "Visuals")
+		LoadTabContent(pageVisual, "https://raw.githubusercontent.com/ahmadrio0703-web/script/refs/heads/main/visual.lua", "Visuals")
 	end)
 
 	btnTabScanner.MouseButton1Click:Connect(function() 
-		LoadTabContent(pageScanner, "https://github.com/ahmadrio0703-web/script/raw/refs/heads/main/scanner.lua", "Scanner")
+		LoadTabContent(pageScanner, "https://raw.githubusercontent.com/ahmadrio0703-web/script/refs/heads/main/scanner.lua", "Scanner")
 	end)
 
 	btnTabMount.MouseButton1Click:Connect(function()   
-		LoadTabContent(pageMount, "https://github.com/ahmadrio0703-web/script/raw/refs/heads/main/mount.lua", "Mount")
+		LoadTabContent(pageMount, "https://raw.githubusercontent.com/ahmadrio0703-web/script/refs/heads/main/mount.lua", "Mount")
 	end)
 
 	btnTabTroll.MouseButton1Click:Connect(function()   
-		LoadTabContent(pageTroll, "https://github.com/ahmadrio0703-web/script/raw/refs/heads/main/trol.lua", "Troll")
+		LoadTabContent(pageTroll, "https://raw.githubusercontent.com/ahmadrio0703-web/script/refs/heads/main/trol.lua", "Troll")
 	end)
 
 	btnTabPerf.MouseButton1Click:Connect(function()    
-		LoadTabContent(pagePerf, "https://github.com/ahmadrio0703-web/script/raw/refs/heads/main/setting.lua", "Settings")
+		LoadTabContent(pagePerf, "https://raw.githubusercontent.com/ahmadrio0703-web/script/refs/heads/main/setting.lua", "Settings")
 	end)
 
 	btnMax.MouseButton1Click:Connect(function()
@@ -554,37 +525,22 @@ local function BukaMenuUtamaUltimate()
 		}):Play()
 	end)
 
-	btnTutup.MouseButton1Click:Connect(function() 
-		-- Animasi tutup menu halus sebelum dihancurkan
-		TweenService:Create(mainFrame, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
-			Size = UDim2.new(0, 0, 0, 0)
-		}):Play()
-		task.wait(0.25)
-		menuGui:Destroy() 
-	end)
-
+	btnTutup.MouseButton1Click:Connect(function() menuGui:Destroy() end)
+	
 	btnToggle.MouseButton1Click:Connect(function()
 		menuTerbuka = not menuTerbuka
 		local targetSize = menuTerbuka and (isFullScreen and UDim2.new(1, 0, 1, 0) or UDim2.new(0, 480, 0, 270)) or UDim2.new(0, 0, 0, 0)
 		TweenService:Create(mainFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = targetSize, Position = UDim2.new(0.5, 0, 0.5, 0)}):Play()
 	end)
 
-	TampilkanNotifikasiHijau("Dark Void Smooth & Modular Loaded!")
+	TampilkanNotifikasiHijau("Dark Void Stable Version Loaded!")
 end
 
--- LOGIKA LOGIN (SMOOTH TRANSITION)
+-- LOGIKA LOGIN
 local function CekLogin()
 	if inputPassBox.Text == passwordBenar then
 		TampilkanNotifikasiHijau("Login Berhasil! Memuat Menu...")
-		
-		TweenService:Create(loginFrame, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
-			Size = UDim2.new(0, 0, 0, 0),
-			Position = UDim2.new(0.5, 0, 0.5, 0)
-		}):Play()
-		
-		task.wait(0.35)
 		loginFrame:Destroy()
-		
 		BukaMenuUtamaUltimate()
 	else
 		TampilkanNotifikasiHijau("Password Salah! Coba lagi.")
