@@ -103,7 +103,7 @@ local function TampilkanPopupSinyal()
 		popUpDesc.Size = UDim2.new(1, -20, 0, 35)
 		popUpDesc.Position = UDim2.new(0, 10, 0, 32)
 		popUpDesc.BackgroundTransparency = 1
-		popUpDesc.Text = "Kestabilan sinyal/jaringan dapat mempengaruhi kecepatan munculnya fitur mod menu
+		popUpDesc.Text = "Kestabilan sinyal/jaringan dapat mempengaruhi kecepatan munculnya fitur saat pertama kali di-load."
 		popUpDesc.TextColor3 = Color3.fromRGB(200, 200, 215)
 		popUpDesc.Font = Enum.Font.Gotham
 		popUpDesc.TextSize = 10
