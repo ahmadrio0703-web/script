@@ -1,5 +1,5 @@
 -- ==========================================
--- LYNN MOD MENU - DARK VOID (MODULAR TEMPLATE)
+-- LYNN MOD MENU - DARK VOID (SMOOTH & LOADING OVERLAY)
 -- ==========================================
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
@@ -71,16 +71,20 @@ local function TampilkanNotifikasiHijau(pesan)
 end
 
 -- ==========================================
--- LOGIN SCREEN
+-- LOGIN SCREEN (SMOOTH ANIMATION)
 -- ==========================================
 local loginFrame = Instance.new("Frame", menuGui)
-loginFrame.Size = UDim2.new(0, 320, 0, 180)
+loginFrame.Size = UDim2.new(0, 0, 0, 0)
 loginFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 loginFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 loginFrame.BackgroundColor3 = Color3.fromRGB(9, 9, 13)
 loginFrame.BorderSizePixel = 0
 loginFrame.ZIndex = 888888
 Instance.new("UICorner", loginFrame).CornerRadius = UDim.new(0, 12)
+
+TweenService:Create(loginFrame, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+	Size = UDim2.new(0, 320, 0, 180)
+}):Play()
 
 local loginStroke = Instance.new("UIStroke", loginFrame)
 loginStroke.Color = Color3.fromRGB(45, 45, 60)
@@ -137,7 +141,7 @@ btnLoginStroke.Color = Color3.fromRGB(60, 60, 75)
 btnLoginStroke.Thickness = 1.2
 
 -- ==========================================
--- MENU UTAMA ULTIMATE (MODULAR SYSTEM)
+-- MENU UTAMA ULTIMATE (SMOOTH & MODULAR)
 -- ==========================================
 local function BukaMenuUtamaUltimate()
 	local isFullScreen = false 
@@ -178,7 +182,7 @@ local function BukaMenuUtamaUltimate()
 
 	-- MAIN FRAME
 	local mainFrame = Instance.new("Frame")
-	mainFrame.Size = UDim2.new(0, 480, 0, 270)
+	mainFrame.Size = UDim2.new(0, 0, 0, 0)
 	mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 	mainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 	mainFrame.BackgroundColor3 = Color3.fromRGB(8, 8, 11) 
@@ -190,6 +194,11 @@ local function BukaMenuUtamaUltimate()
 	mainStroke.Color = Color3.fromRGB(38, 38, 48)
 	mainStroke.Thickness = 1.2
 	BuatBisaDigeser(mainFrame) 
+
+	-- Animasi buka main frame smooth
+	TweenService:Create(mainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+		Size = UDim2.new(0, 480, 0, 270)
+	}):Play()
 
 	local btnTutup = Instance.new("TextButton", mainFrame)
 	btnTutup.Size = UDim2.new(0, 24, 0, 24)
@@ -417,6 +426,27 @@ local function BukaMenuUtamaUltimate()
 	pagePerf.CanvasSize = UDim2.new(0, 0, 2, 0)
 	pagePerf.ScrollBarThickness = 3
 
+	-- ==========================================
+	-- LOADING OVERLAY (EFEK KERTAS / KOTAK PEMBUAT LOADING DI TIAP TAB)
+	-- ==========================================
+	local loadingOverlay = Instance.new("Frame", mainFrame)
+	loadingOverlay.Size = UDim2.new(1, -130, 1, -45)
+	loadingOverlay.Position = UDim2.new(0, 130, 0, 45)
+	loadingOverlay.BackgroundColor3 = Color3.fromRGB(8, 8, 11)
+	loadingOverlay.BackgroundTransparency = 0.3
+	loadingOverlay.BorderSizePixel = 0
+	loadingOverlay.Visible = false
+	loadingOverlay.ZIndex = 9999
+
+	local loadingText = Instance.new("TextLabel", loadingOverlay)
+	loadingText.Size = UDim2.new(1, 0, 1, 0)
+	loadingText.BackgroundTransparency = 1
+	loadingText.Text = "⏳ Memuat Fitur..."
+	loadingText.TextColor3 = Color3.fromRGB(200, 200, 215)
+	loadingText.Font = Enum.Font.GothamBold
+	loadingText.TextSize = 12
+	loadingText.ZIndex = 10000
+
 	local function GantiTab(aktif, p1, p2, p3, p4, p5, p6, p7)
 		p1.Visible = true p2.Visible = false p3.Visible = false p4.Visible = false p5.Visible = false p6.Visible = false p7.Visible = false
 		btnTabVip.BackgroundColor3     = Color3.fromRGB(11, 11, 15) btnTabVip.TextColor3     = Color3.fromRGB(140, 140, 155)
@@ -431,203 +461,128 @@ local function BukaMenuUtamaUltimate()
 		aktif.TextColor3 = Color3.fromRGB(245, 245, 250)
 	end
 
+	-- FUNGSI MODULAR LOADER DENGAN LOADING OVERLAY & EFEK SMOOTH
+	local function LoadTabContent(pageTarget, rawUrl, namaTab)
+		GantiTab(
+			-- Menyesuaikan tombol aktif berdasarkan halaman
+			pageTarget == pageVip and btnTabVip or
+			pageTarget == pagePlayer and btnTabPlayer or
+			pageTarget == pageVisual and btnTabVisual or
+			pageTarget == pageScanner and btnTabScanner or
+			pageTarget == pageMount and btnTabMount or
+			pageTarget == pageTroll and btnTabTroll or btnTabPerf,
+			pageVip, pagePlayer, pageVisual, pageScanner, pageMount, pageTroll, pagePerf
+		)
+
+		if not pageTarget:FindFirstChild("IsLoaded") then
+			-- Tampilkan overlay loading melayang di atas tab
+			loadingOverlay.Visible = true
+			loadingText.Text = "⏳ Menghubungkan ke server (" .. namaTab.
+				.. ")..."
+
+			task.spawn(function()
+				local success, err = pcall(function()
+					local code = game:HttpGet(rawUrl)
+					loadingText.Text = "⚡ Memproses modul..."
+					task.wait(0.1) -- Efek transisi smooth sebentar
+					loadstring(code)(pageTarget, menuGui)
+
+					local marker = Instance.new("Folder", pageTarget)
+					marker.Name = "IsLoaded"
+					marker.Parent = pageTarget
+				end)
+
+				if not success then
+					warn("Gagal memuat " .. namaTab .. ": " .. tostring(err))
+					TampilkanNotifikasiHijau("⚠️ Gagal memuat " .. namaTab)
+				end
+
+				-- Hilangkan overlay loading dengan transisi smooth fade out
+				TweenService:Create(loadingOverlay, TweenInfo.new(0.2), {
+					BackgroundTransparency = 1
+				}):Play()
+				TweenService:Create(loadingText, TweenInfo.new(0.2), {
+					TextTransparency = 1
+				}):Play()
+				task.wait(0.2)
+				loadingOverlay.Visible = false
+				loadingOverlay.BackgroundTransparency = 0.3
+				loadingText.TextTransparency = 0
+			end)
+		else
+			-- Kalau sudah pernah di-load sebelumnya, langsung mulus tanpa loading lagi
+			loadingOverlay.Visible = false
+		end
+	end
+
 	-- ==========================================
-	-- TAB 1: VIP (Contoh Link URL dimasukkan di sini)
+	-- EVENT KLIK TAB (MENGGUNAKAN LOADER + OVERLAY)
 	-- ==========================================
 	btnTabVip.MouseButton1Click:Connect(function()     
-		GantiTab(btnTabVip, pageVip, pagePlayer, pageVisual, pageScanner, pageMount, pageTroll, pagePerf) 
-		
-		if not pageVip:FindFirstChild("IsLoaded") then
-			local marker = Instance.new("Folder", pageVip)
-			marker.Name = "IsLoaded"
-			marker.Parent = pageVip
-			
-			task.spawn(function()
-				local success, err = pcall(function()
-					-- 👇 GANTI LINK DI BAWAH INI DENGAN LINK RAW GITHUB VIP LU 👇
-					local rawUrl = "https://raw.githubusercontent.com/ahmadrio0703-web/script/refs/heads/main/vip.lua"
-					loadstring(game:HttpGet(rawUrl))(pageVip, menuGui)
-				end)
-				if not success then
-					warn("Gagal memuat Tab VIP: " .. tostring(err))
-				end
-			end)
-		end
+		LoadTabContent(pageVip, "https://raw.githubusercontent.com/ahmadrio0703-web/script/refs/heads/main/vip.lua", "VIP")
 	end)
 
-	-- ==========================================
-	-- TAB 2: PLAYER (Contoh Link URL)
-	-- ==========================================
 	btnTabPlayer.MouseButton1Click:Connect(function()  
-		GantiTab(btnTabPlayer, pagePlayer, pageVip, pageVisual, pageScanner, pageMount, pageTroll, pagePerf) 
-		
-		if not pagePlayer:FindFirstChild("IsLoaded") then
-			local marker = Instance.new("Folder", pagePlayer)
-			marker.Name = "IsLoaded"
-			marker.Parent = pagePlayer
-			
-			task.spawn(function()
-				local success, err = pcall(function()
-					-- 👇 GANTI LINK DI BAWAH INI DENGAN LINK RAW GITHUB PLAYER LU 👇
-					local rawUrl = "https://raw.githubusercontent.com/usernamekamu/repo/main/player.lua"
-					loadstring(game:HttpGet(rawUrl))(pagePlayer, menuGui)
-				end)
-				if not success then
-					warn("Gagal memuat Tab Player: " .. tostring(err))
-				end
-			end)
-		end
+		LoadTabContent(pagePlayer, "https://github.com/ahmadrio0703-web/script/raw/refs/heads/main/player.lua", "Player")
 	end)
 
-	-- ==========================================
-	-- TAB 3: VISUALS (Contoh Link URL)
-	-- ==========================================
 	btnTabVisual.MouseButton1Click:Connect(function()  
-		GantiTab(btnTabVisual, pageVisual, pageVip, pagePlayer, pageScanner, pageMount, pageTroll, pagePerf) 
-		
-		if not pageVisual:FindFirstChild("IsLoaded") then
-			local marker = Instance.new("Folder", pageVisual)
-			marker.Name = "IsLoaded"
-			marker.Parent = pageVisual
-			
-			task.spawn(function()
-				local success, err = pcall(function()
-					-- 👇 GANTI LINK DI BAWAH INI DENGAN LINK RAW GITHUB VISUALS LU 👇
-					local rawUrl = "https://raw.githubusercontent.com/usernamekamu/repo/main/visuals.lua"
-					loadstring(game:HttpGet(rawUrl))(pageVisual, menuGui)
-				end)
-				if not success then
-					warn("Gagal memuat Tab Visuals: " .. tostring(err))
-				end
-			end)
-		end
+		LoadTabContent(pageVisual, "https://github.com/ahmadrio0703-web/script/raw/refs/heads/main/visual.lua", "Visuals")
 	end)
 
-	-- ==========================================
-	-- TAB 4: SCANNER (Contoh Link URL)
-	-- ==========================================
 	btnTabScanner.MouseButton1Click:Connect(function() 
-		GantiTab(btnTabScanner, pageScanner, pageVip, pagePlayer, pageVisual, pageMount, pageTroll, pagePerf) 
-		
-		if not pageScanner:FindFirstChild("IsLoaded") then
-			local marker = Instance.new("Folder", pageScanner)
-			marker.Name = "IsLoaded"
-			marker.Parent = pageScanner
-			
-			task.spawn(function()
-				local success, err = pcall(function()
-					-- 👇 GANTI LINK DI BAWAH INI DENGAN LINK RAW GITHUB SCANNER LU 👇
-					local rawUrl = "https://raw.githubusercontent.com/usernamekamu/repo/main/scanner.lua"
-					loadstring(game:HttpGet(rawUrl))(pageScanner, menuGui)
-				end)
-				if not success then
-					warn("Gagal memuat Tab Scanner: " .. tostring(err))
-				end
-			end)
-		end
+		LoadTabContent(pageScanner, "https://github.com/ahmadrio0703-web/script/raw/refs/heads/main/scanner.lua", "Scanner")
 	end)
 
-	-- ==========================================
-	-- TAB 5: MOUNT (Contoh Link URL)
-	-- ==========================================
 	btnTabMount.MouseButton1Click:Connect(function()   
-		GantiTab(btnTabMount, pageMount, pageVip, pagePlayer, pageVisual, pageScanner, pageTroll, pagePerf) 
-		
-		if not pageMount:FindFirstChild("IsLoaded") then
-			local marker = Instance.new("Folder", pageMount)
-			marker.Name = "IsLoaded"
-			marker.Parent = pageMount
-			
-			task.spawn(function()
-				local success, err = pcall(function()
-					-- 👇 GANTI LINK DI BAWAH INI DENGAN LINK RAW GITHUB MOUNT LU 👇
-					local rawUrl = "https://raw.githubusercontent.com/usernamekamu/repo/main/mount.lua"
-					loadstring(game:HttpGet(rawUrl))(pageMount, menuGui)
-				end)
-				if not success then
-					warn("Gagal memuat Tab Mount: " .. tostring(err))
-				end
-			end)
-		end
+		LoadTabContent(pageMount, "https://github.com/ahmadrio0703-web/script/raw/refs/heads/main/mount.lua", "Mount")
 	end)
 
-	-- ==========================================
-	-- TAB 6: TROLL (Contoh Link URL)
-	-- ==========================================
 	btnTabTroll.MouseButton1Click:Connect(function()   
-		GantiTab(btnTabTroll, pageTroll, pageVip, pagePlayer, pageVisual, pageScanner, pageMount, pagePerf) 
-		
-		if not pageTroll:FindFirstChild("IsLoaded") then
-			local marker = Instance.new("Folder", pageTroll)
-			marker.Name = "IsLoaded"
-			marker.Parent = pageTroll
-			
-			task.spawn(function()
-				local success, err = pcall(function()
-					-- 👇 GANTI LINK DI BAWAH INI DENGAN LINK RAW GITHUB TROLL LU 👇
-					local rawUrl = "https://raw.githubusercontent.com/usernamekamu/repo/main/troll.lua"
-					loadstring(game:HttpGet(rawUrl))(pageTroll, menuGui)
-				end)
-				if not success then
-					warn("Gagal memuat Tab Troll: " .. tostring(err))
-				end
-			end)
-		end
+		LoadTabContent(pageTroll, "https://github.com/ahmadrio0703-web/script/raw/refs/heads/main/trol.lua", "Troll")
 	end)
 
-	-- ==========================================
-	-- TAB 7: SETTINGS (Contoh Link URL)
-	-- ==========================================
 	btnTabPerf.MouseButton1Click:Connect(function()    
-		GantiTab(btnTabPerf, pagePerf, pageVip, pagePlayer, pageVisual, pageScanner, pageMount, pageTroll) 
-		
-		if not pagePerf:FindFirstChild("IsLoaded") then
-			local marker = Instance.new("Folder", pagePerf)
-			marker.Name = "IsLoaded"
-			marker.Parent = pagePerf
-			
-			task.spawn(function()
-				local success, err = pcall(function()
-					-- 👇 GANTI LINK DI BAWAH INI DENGAN LINK RAW GITHUB SETTINGS LU 👇
-					local rawUrl = "https://raw.githubusercontent.com/usernamekamu/repo/main/settings.lua"
-					loadstring(game:HttpGet(rawUrl))(pagePerf, menuGui)
-				end)
-				if not success then
-					warn("Gagal memuat Tab Settings: " .. tostring(err))
-				end
-			end)
-		end
+		LoadTabContent(pagePerf, "https://github.com/ahmadrio0703-web/script/raw/refs/heads/main/setting.lua", "Settings")
 	end)
 
 	btnMax.MouseButton1Click:Connect(function()
 		isFullScreen = not isFullScreen
-		TweenService:Create(mainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+		TweenService:Create(mainFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
 			Size = isFullScreen and UDim2.new(1, 0, 1, 0) or UDim2.new(0, 480, 0, 270),
 			Position = UDim2.new(0.5, 0, 0.5, 0)
 		}):Play()
 	end)
 
-	btnTutup.MouseButton1Click:Connect(function() menuGui:Destroy() end)
+	btnTutup.MouseButton1Click:Connect(function() 
+		-- Animasi tutup menu halus sebelum dihancurkan
+		TweenService:Create(mainFrame, TweenInfo.new(0.25, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+			Size = UDim2.new(0, 0, 0, 0)
+		}):Play()
+		task.wait(0.25)
+		menuGui:Destroy() 
+	end)
+
 	btnToggle.MouseButton1Click:Connect(function()
 		menuTerbuka = not menuTerbuka
 		local targetSize = menuTerbuka and (isFullScreen and UDim2.new(1, 0, 1, 0) or UDim2.new(0, 480, 0, 270)) or UDim2.new(0, 0, 0, 0)
-		TweenService:Create(mainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = targetSize, Position = UDim2.new(0.5, 0, 0.5, 0)}):Play()
+		TweenService:Create(mainFrame, TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = targetSize, Position = UDim2.new(0.5, 0, 0.5, 0)}):Play()
 	end)
 
-	TampilkanNotifikasiHijau("Dark Void Modular Core Loaded!")
+	TampilkanNotifikasiHijau("Dark Void Smooth & Modular Loaded!")
 end
 
--- LOGIKA LOGIN
+-- LOGIKA LOGIN (SMOOTH TRANSITION)
 local function CekLogin()
 	if inputPassBox.Text == passwordBenar then
 		TampilkanNotifikasiHijau("Login Berhasil! Memuat Menu...")
 		
-		TweenService:Create(loginFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+		TweenService:Create(loginFrame, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
 			Size = UDim2.new(0, 0, 0, 0),
 			Position = UDim2.new(0.5, 0, 0.5, 0)
 		}):Play()
 		
-		task.wait(0.3)
+		task.wait(0.35)
 		loginFrame:Destroy()
 		
 		BukaMenuUtamaUltimate()
