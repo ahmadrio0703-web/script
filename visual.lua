@@ -1,5 +1,5 @@
 -- ==========================================
--- LYNN MOD MENU - TAB VISUALS (CUSTOM COLOR & TRANSPARENCY)
+-- LYNN MOD MENU - TAB VISUALS (GRID PALET ALL COLORS)
 -- ==========================================
 local pageVisual, menuGui = ... -- Menerima parameter operan dari script utama
 local Players = game:GetService("Players")
@@ -44,99 +44,115 @@ local function TampilkanNotifikasiHijau(pesan)
 	end)
 end
 
--- Variabel Pengaturan Warna Global & Transparansi Default
-local customWarnaGlobal = Color3.fromRGB(255, 255, 255)
-local customTransparanGlobal = 0.5 -- 0.0 (Solid/Pekat) sampai 1.0 (Transparan total)
+-- Variabel Warna & Transparansi Global
+local warnaAktifGlobal = Color3.fromRGB(255, 255, 255)
+local transparanIndexGlobal = 2 -- Default Sedang
+local daftarTransparan = {
+	{nama = "Pekat", nilai = 0.0},
+	{nama = "Sedang", nilai = 0.5},
+	{nama = "Transparan", nilai = 0.8}
+}
+
 local RefreshEspPlayerGlobal = nil
 
 -- ==========================================
--- MENU PENGATURAN WARNA CUSTOM & TRANSPARANSI
+-- MENU PENGATURAN WARNA (GRID PALET LENGKAP)
 -- ==========================================
-local settingsColorRow = Instance.new("Frame", pageVisual)
-settingsColorRow.Size = UDim2.new(1, -20, 0, 70)
-settingsColorRow.Position = UDim2.new(0, 10, 0, 10)
-settingsColorRow.BackgroundTransparency = 1
+local settingsRow = Instance.new("Frame", pageVisual)
+settingsRow.Size = UDim2.new(1, -20, 0, 115)
+settingsRow.Position = UDim2.new(0, 10, 0, 10)
+settingsRow.BackgroundTransparency = 1
 
-local colorTitle = Instance.new("TextLabel", settingsColorRow)
-colorTitle.Size = UDim2.new(1, 0, 0, 20)
-colorTitle.BackgroundTransparency = 1
-colorTitle.Text = "PENGATURAN WARNA & TRANSPARANSI ESP"
-colorTitle.TextColor3 = Color3.fromRGB(220, 220, 235)
-colorTitle.Font = Enum.Font.GothamBold
-colorTitle.TextSize = 11
-colorTitle.TextXAlignment = Enum.TextXAlignment.Left
+local titleSet = Instance.new("TextLabel", settingsRow)
+titleSet.Size = UDim2.new(1, 0, 0, 20)
+titleSet.BackgroundTransparency = 1
+titleSet.Text = "PILIH WARNA ESP (KLIK KOTAK DI BAWAH)"
+titleSet.TextColor3 = Color3.fromRGB(220, 220, 235)
+titleSet.Font = Enum.Font.GothamBold
+titleSet.TextSize = 10.5
+titleSet.TextXAlignment = Enum.TextXAlignment.Left
 
--- Input Custom RGB (Contoh: 255,100,50)
-local labelRgb = Instance.new("TextLabel", settingsColorRow)
-labelRgb.Size = UDim2.new(0.4, 0, 0, 24)
-labelRgb.Position = UDim2.new(0, 0, 0, 28)
-labelRgb.BackgroundTransparency = 1
-labelRgb.Text = "Kode Warna (R,G,B):"
-labelRgb.TextColor3 = Color3.fromRGB(180, 180, 195)
-labelRgb.Font = Enum.Font.Gotham
-labelRgb.TextSize = 10.5
-labelRgb.TextXAlignment = Enum.TextXAlignment.Left
+-- Container Kotak-kotak Warna (Grid Palette)
+local paletteContainer = Instance.new("Frame", settingsRow)
+paletteContainer.Size = UDim2.new(1, 0, 0, 50)
+paletteContainer.Position = UDim2.new(0, 0, 0, 22)
+paletteContainer.BackgroundTransparency = 1
 
-local inputCustomRgb = Instance.new("TextBox", settingsColorRow)
-inputCustomRgb.Size = UDim2.new(0, 110, 0, 24)
-inputCustomRgb.Position = UDim2.new(1, -110, 0, 28)
-inputCustomRgb.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
-inputCustomRgb.TextColor3 = Color3.fromRGB(240, 240, 250)
-inputCustomRgb.Text = "255,255,255"
-inputCustomRgb.PlaceholderText = "255,255,255"
-inputCustomRgb.Font = Enum.Font.Gotham
-inputCustomRgb.TextSize = 10 
-Instance.new("UICorner", inputCustomRgb).CornerRadius = UDim.new(0, 4)
-Instance.new("UIStroke", inputCustomRgb).Color = Color3.fromRGB(38, 38, 48)
+local gridLayout = Instance.new("UIGridLayout", paletteContainer)
+gridLayout.CellSize = UDim2.new(0, 27, 0, 22)
+gridLayout.CellPadding = UDim2.new(0, 5, 0, 5)
+gridLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
--- Input Transparansi (Angka 0.0 sampai 1.0)
-local labelAlpha = Instance.new("TextLabel", settingsColorRow)
-labelAlpha.Size = UDim2.new(0.4, 0, 0, 24)
-labelAlpha.Position = UDim2.new(0, 0, 0, 56)
-labelAlpha.BackgroundTransparency = 1
-labelAlpha.Text = "Transparansi (0 - 1):"
-labelAlpha.TextColor3 = Color3.fromRGB(180, 180, 195)
-labelAlpha.Font = Enum.Font.Gotham
-labelAlpha.TextSize = 10.5
-labelAlpha.TextXAlignment = Enum.TextXAlignment.Left
+-- Kumpulan Banyak Pilihan Warna Bebas (All Colors)
+local semuaPilihanWarna = {
+	Color3.fromRGB(255, 255, 255), Color3.fromRGB(200, 200, 200), Color3.fromRGB(120, 120, 120), Color3.fromRGB(20, 20, 20),
+	Color3.fromRGB(255, 50, 50),   Color3.fromRGB(255, 120, 50),  Color3.fromRGB(255, 200, 50),  Color3.fromRGB(255, 255, 50),
+	Color3.fromRGB(150, 255, 50),  Color3.fromRGB(50, 255, 90),   Color3.fromRGB(50, 255, 200),  Color3.fromRGB(50, 200, 255),
+	Color3.fromRGB(50, 130, 255),  Color3.fromRGB(100, 50, 255),  Color3.fromRGB(180, 50, 255),  Color3.fromRGB(255, 50, 200),
+	Color3.fromRGB(255, 150, 180), Color3.fromRGB(200, 150, 100), Color3.fromRGB(130, 80, 40),   Color3.fromRGB(0, 255, 230)
+}
 
-local inputCustomAlpha = Instance.new("TextBox", settingsColorRow)
-inputCustomAlpha.Size = UDim2.new(0, 110, 0, 24)
-inputCustomAlpha.Position = UDim2.new(1, -110, 0, 56)
-inputCustomAlpha.BackgroundColor3 = Color3.fromRGB(12, 12, 16)
-inputCustomAlpha.TextColor3 = Color3.fromRGB(240, 240, 250)
-inputCustomAlpha.Text = "0.5"
-inputCustomAlpha.PlaceholderText = "0.0 - 1.0"
-inputCustomAlpha.Font = Enum.Font.Gotham
-inputCustomAlpha.TextSize = 10 
-Instance.new("UICorner", inputCustomAlpha).CornerRadius = UDim.new(0, 4)
-Instance.new("UIStroke", inputCustomAlpha).Color = Color3.fromRGB(38, 38, 48)
+-- Indikator Warna yang Sedang Dipilih
+local indikatorWarnaAktif = Instance.new("Frame", settingsRow)
+indikatorWarnaAktif.Size = UDim2.new(0, 18, 0, 18)
+indikatorWarnaAktif.Position = UDim2.new(0, 0, 0, 82)
+indikatorWarnaAktif.BackgroundColor3 = warnaAktifGlobal
+Instance.new("UICorner", indikatorWarnaAktif).CornerRadius = UDim.new(0, 4)
+local indStroke = Instance.new("UIStroke", indikatorWarnaAktif)
+indStroke.Color = Color3.fromRGB(255, 255, 255)
+indStroke.Thickness = 1.5
 
-local function ParseCustomColor(text)
-	local r, g, b = text:match("([^,]+),([^,]+),([^,]+)")
-	if r and g and b then
-		return Color3.fromRGB(tonumber(r) or 255, tonumber(g) or 255, tonumber(b) or 255)
-	end
-	return Color3.fromRGB(255, 255, 255)
+local teksStatusWarna = Instance.new("TextLabel", settingsRow)
+teksStatusWarna.Size = UDim2.new(0.5, 0, 0, 20)
+teksStatusWarna.Position = UDim2.new(0, 25, 0, 81)
+teksStatusWarna.BackgroundTransparency = 1
+teksStatusWarna.Text = "Warna Aktif"
+teksStatusWarna.TextColor3 = Color3.fromRGB(200, 200, 215)
+teksStatusWarna.Font = Enum.Font.Gotham
+teksStatusWarna.TextSize = 10
+teksStatusWarna.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Buat Kotak Palet Warna Otomatis di Dalam Grid
+for _, warnaItem in ipairs(semuaPilihanWarna) do
+	local btnWarnaGrid = Instance.new("TextButton", paletteContainer)
+	btnWarnaGrid.BackgroundColor3 = warnaItem
+	btnWarnaGrid.Text = ""
+	Instance.new("UICorner", btnWarnaGrid).CornerRadius = UDim.new(0, 4)
+	local strokeGrid = Instance.new("UIStroke", btnWarnaGrid)
+	strokeGrid.Color = Color3.fromRGB(40, 40, 55)
+	strokeGrid.Thickness = 1
+	
+	btnWarnaGrid.MouseButton1Click:Connect(function()
+		warnaAktifGlobal = warnaItem
+		indikatorWarnaAktif.BackgroundColor3 = warnaItem
+		TampilkanNotifikasiHijau("Warna ESP Diubah!")
+		if RefreshEspPlayerGlobal then RefreshEspPlayerGlobal() end
+	end)
 end
 
--- Update otomatis saat kotak teks RGB/Alpha selesai diketik
-inputCustomRgb.FocusLost:Connect(function()
-	customWarnaGlobal = ParseCustomColor(inputCustomRgb.Text)
-	TampilkanNotifikasiHijau("Warna Custom Diperbarui!")
+-- Tombol Pilih Tingkat Transparansi
+local btnPilihTrans = Instance.new("TextButton", settingsRow)
+btnPilihTrans.Size = UDim2.new(0, 110, 0, 22)
+btnPilihTrans.Position = UDim2.new(1, -110, 0, 81)
+btnPilihTrans.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
+btnPilihTrans.Text = "Transparansi: Sedang"
+btnPilihTrans.TextColor3 = Color3.fromRGB(230, 230, 240)
+btnPilihTrans.Font = Enum.Font.GothamBold
+btnPilihTrans.TextSize = 9.5
+Instance.new("UICorner", btnPilihTrans).CornerRadius = UDim.new(0, 5)
+Instance.new("UIStroke", btnPilihTrans).Color = Color3.fromRGB(50, 50, 70)
+
+btnPilihTrans.MouseButton1Click:Connect(function()
+	transparanIndexGlobal = transparanIndexGlobal + 1
+	if transparanIndexGlobal > #daftarTransparan then transparanIndexGlobal = 1 end
+	local selTrans = daftarTransparan[transparanIndexGlobal]
+	
+	btnPilihTrans.Text = "Transparansi: " .. selTrans.nama
+	TampilkanNotifikasiHijau("Transparansi: " .. selTrans.nama)
 	if RefreshEspPlayerGlobal then RefreshEspPlayerGlobal() end
 end)
 
-inputCustomAlpha.FocusLost:Connect(function()
-	local val = tonumber(inputCustomAlpha.Text)
-	if val then
-		if val < 0 then val = 0 elseif val > 1 then val = 1 end
-		customTransparanGlobal = val
-		TampilkanNotifikasiHijau("Transparansi Diatur ke: " .. val)
-		if RefreshEspPlayerGlobal then RefreshEspPlayerGlobal() end
-	end
-end)
-
+-- Fungsi Pembuat Baris Saklar Standar
 local function BuatRowSaklarStandar(parent, posY, judul)
 	local row = Instance.new("Frame", parent)
 	row.Size = UDim2.new(1, -20, 0, 35)
@@ -188,7 +204,7 @@ end
 -- ==========================================
 -- 1. ESP BOX
 -- ==========================================
-local btnEspBox, bgEspBox, knobEspBox = BuatRowSaklarStandar(pageVisual, 85, "ESP Box Player")
+local btnEspBox, bgEspBox, knobEspBox = BuatRowSaklarStandar(pageVisual, 130, "ESP Box Player")
 local espBoxOn = false
 
 local function RebuildEspBox()
@@ -198,6 +214,7 @@ local function RebuildEspBox()
 		end
 	end
 	if espBoxOn then
+		local transAktif = daftarTransparan[transparanIndexGlobal].nilai
 		for _, p in pairs(Players:GetPlayers()) do
 			if p ~= player and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
 				local bill = Instance.new("BillboardGui")
@@ -208,11 +225,11 @@ local function RebuildEspBox()
 				
 				local frame = Instance.new("Frame", bill)
 				frame.Size = UDim2.new(1, 0, 1, 0)
-				frame.BackgroundTransparency = customTransparanGlobal -- Mengikuti tingkat transparansi
-				frame.BackgroundColor3 = customWarnaGlobal
+				frame.BackgroundColor3 = warnaAktifGlobal
+				frame.BackgroundTransparency = transAktif
 				
 				local stroke = Instance.new("UIStroke", frame)
-				stroke.Color = customWarnaGlobal
+				stroke.Color = warnaAktifGlobal
 				stroke.Thickness = 1.5
 				
 				bill.Parent = p.Character
@@ -231,7 +248,7 @@ end)
 -- ==========================================
 -- 2. ESP NAMA
 -- ==========================================
-local btnEspName, bgEspName, knobEspName = BuatRowSaklarStandar(pageVisual, 125, "ESP Nama Player")
+local btnEspName, bgEspName, knobEspName = BuatRowSaklarStandar(pageVisual, 170, "ESP Nama Player")
 local espNameOn = false
 
 local function RebuildEspName()
@@ -241,6 +258,7 @@ local function RebuildEspName()
 		end
 	end
 	if espNameOn then
+		local transAktif = daftarTransparan[transparanIndexGlobal].nilai
 		for _, p in pairs(Players:GetPlayers()) do
 			if p ~= player and p.Character and p.Character:FindFirstChild("Head") then
 				local bill = Instance.new("BillboardGui")
@@ -255,8 +273,8 @@ local function RebuildEspName()
 				txt.Size = UDim2.new(1, 0, 1, 0)
 				txt.BackgroundTransparency = 1
 				txt.Text = p.Name
-				txt.TextColor3 = customWarnaGlobal
-				txt.TextTransparency = customTransparanGlobal -- Mengikuti transparansi teks
+				txt.TextColor3 = warnaAktifGlobal
+				txt.TextTransparency = transAktif
 				txt.Font = Enum.Font.GothamBold
 				txt.TextSize = 11
 				txt.TextStrokeTransparency = 0.4
@@ -277,7 +295,7 @@ end)
 -- ==========================================
 -- 3. ESP JARAK (DISTANCE)
 -- ==========================================
-local btnEspDist, bgEspDist, knobEspDist = BuatRowSaklarStandar(pageVisual, 165, "ESP Jarak (Distance)")
+local btnEspDist, bgEspDist, knobEspDist = BuatRowSaklarStandar(pageVisual, 210, "ESP Jarak (Distance)")
 local espDistOn = false
 local distConnection = nil
 
@@ -290,6 +308,7 @@ local function RebuildEspDist()
 	if distConnection then distConnection:Disconnect() end
 	
 	if espDistOn then
+		local transAktif = daftarTransparan[transparanIndexGlobal].nilai
 		for _, p in pairs(Players:GetPlayers()) do
 			if p ~= player and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
 				local bill = Instance.new("BillboardGui")
@@ -303,8 +322,8 @@ local function RebuildEspDist()
 				txt.Name = "DistText"
 				txt.Size = UDim2.new(1, 0, 1, 0)
 				txt.BackgroundTransparency = 1
-				txt.TextColor3 = customWarnaGlobal
-				txt.TextTransparency = customTransparanGlobal
+				txt.TextColor3 = warnaAktifGlobal
+				txt.TextTransparency = transAktif
 				txt.Font = Enum.Font.GothamBold
 				txt.TextSize = 10
 				txt.TextStrokeTransparency = 0.4
@@ -319,6 +338,7 @@ local function RebuildEspDist()
 				local myRoot = myChar and myChar:FindFirstChild("HumanoidRootPart")
 				if not myRoot then return end
 				
+				local transAktif = daftarTransparan[transparanIndexGlobal].nilai
 				for _, p in pairs(Players:GetPlayers()) do
 					if p ~= player and p.Character then
 						local root = p.Character:FindFirstChild("HumanoidRootPart")
@@ -328,8 +348,8 @@ local function RebuildEspDist()
 							if txt then
 								local dist = math.floor((myRoot.Position - root.Position).Magnitude)
 								txt.Text = "[" .. dist .. "m]"
-								txt.TextColor3 = customWarnaGlobal
-								txt.TextTransparency = customTransparanGlobal
+								txt.TextColor3 = warnaAktifGlobal
+								txt.TextTransparency = transAktif
 							end
 						end
 					end
@@ -346,7 +366,7 @@ btnEspDist.MouseButton1Click:Connect(function()
 	TampilkanNotifikasiHijau(espDistOn and "ESP Jarak Aktif!" or "ESP Jarak Mati.")
 end)
 
--- Hubungkan Fungsi Global
+-- Hubungkan Refresh Global
 RefreshEspPlayerGlobal = function()
 	if espBoxOn then RebuildEspBox() end
 	if espNameOn then RebuildEspName() end
@@ -358,7 +378,7 @@ end
 -- ==========================================
 local fbRow = Instance.new("Frame", pageVisual)
 fbRow.Size = UDim2.new(1, -20, 0, 35)
-fbRow.Position = UDim2.new(0, 10, 0, 210)
+fbRow.Position = UDim2.new(0, 10, 0, 255)
 fbRow.BackgroundTransparency = 1
 
 local fbLabel = Instance.new("TextLabel", fbRow)
@@ -428,7 +448,7 @@ end)
 -- ==========================================
 local objRow = Instance.new("Frame", pageVisual)
 objRow.Size = UDim2.new(1, -20, 0, 55)
-objRow.Position = UDim2.new(0, 10, 0, 255)
+objRow.Position = UDim2.new(0, 10, 0, 298)
 objRow.BackgroundTransparency = 1
 
 local objLabel = Instance.new("TextLabel", objRow)
@@ -498,6 +518,7 @@ btnObjEsp.MouseButton1Click:Connect(function()
 			while objEspActive do
 				pcall(function()
 					ClearCustomHighlights()
+					local transObjAktif = daftarTransparan[transparanIndexGlobal].nilai
 					local count = 0
 					
 					for _, obj in pairs(workspace:GetDescendants()) do
@@ -508,9 +529,9 @@ btnObjEsp.MouseButton1Click:Connect(function()
 								
 								local hl = Instance.new("Highlight")
 								hl.Name = "CustomObjectESP"
-								hl.FillColor = customWarnaGlobal
+								hl.FillColor = warnaAktifGlobal
 								hl.OutlineColor = Color3.fromRGB(255, 255, 255)
-								hl.FillTransparency = customTransparanGlobal -- Mengikuti tingkat transparansi custom
+								hl.FillTransparency = transObjAktif
 								hl.OutlineTransparency = 0.2
 								hl.Adornee = obj
 								hl.Parent = menuGui
