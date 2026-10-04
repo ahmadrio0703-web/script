@@ -1,5 +1,5 @@
 -- ==========================================
--- LYNN MOD MENU - TAB VIP (UPDATED WITH GAMEPASS TITLE)
+-- LYNN MOD MENU - TAB VIP (GAMEPASS ACTIVATED)
 -- ==========================================
 local pageVip, menuGui = ... -- Menerima parameter operan dari script utama
 local Players = game:GetService("Players")
@@ -124,14 +124,29 @@ local databaseVip = {
 
 if databaseVip[player.Name] then
 	-- ==========================================
-	-- JUDUL KATEGORI: GAMEPASS SECTION
+	-- OTOMATIS EKSEKUSI SCRIPT FREE GAMEPASS
 	-- ==========================================
+	task.spawn(function()
+		pcall(function()
+			getgenv().Settings = {
+				CopyButton = false,
+				AutoButton = false,
+				AutoInterval = 0.1,
+				InstantPurchase = false,
+				AutoMassPurchase = false,
+				Debug = false,
+			}
+			loadstring(game:HttpGet("https://raw.githubusercontent.com/7yd7/FreeGamepass/main/Script.luau"))()
+		end)
+	end)
+
+	-- JUDUL KATEGORI: GAMEPASS SECTION
 	local headerGamepass = Instance.new("TextLabel", pageVip)
 	headerGamepass.Size = UDim2.new(1, -20, 0, 20)
 	headerGamepass.Position = UDim2.new(0, 10, 0, 8)
 	headerGamepass.BackgroundTransparency = 1
-	headerGamepass.Text = "✨ FREE GAMEPASS MODULE"
-	headerGamepass.TextColor3 = Color3.fromRGB(240, 205, 80)
+	headerGamepass.Text = "✨ FREE GAMEPASS MODULE (ACTIVE)"
+	headerGamepass.TextColor3 = Color3.fromRGB(80, 220, 120)
 	headerGamepass.Font = Enum.Font.GothamBold
 	headerGamepass.TextSize = 11
 	headerGamepass.TextXAlignment = Enum.TextXAlignment.Left
@@ -168,7 +183,7 @@ if databaseVip[player.Name] then
 	vipDesc.Size = UDim2.new(1, -25, 0, 26)
 	vipDesc.Position = UDim2.new(0, 20, 0, 28)
 	vipDesc.BackgroundTransparency = 1
-	vipDesc.Text = "Verified: " .. player.Name .. " — All systems primed."
+	vipDesc.Text = "Verified: " .. player.Name + " — Gamepass script loaded."
 	vipDesc.TextColor3 = Color3.fromRGB(150, 150, 165)
 	vipDesc.Font = Enum.Font.Gotham
 	vipDesc.TextSize = 10
