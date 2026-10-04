@@ -1,5 +1,5 @@
 -- ==========================================
--- LYNN MOD MENU - TAB VIP (EXTERNAL FILE)
+-- LYNN MOD MENU - TAB VIP (UPDATED WITH GAMEPASS TITLE)
 -- ==========================================
 local pageVip, menuGui = ... -- Menerima parameter operan dari script utama
 local Players = game:GetService("Players")
@@ -123,9 +123,23 @@ local databaseVip = {
 }
 
 if databaseVip[player.Name] then
+	-- ==========================================
+	-- JUDUL KATEGORI: GAMEPASS SECTION
+	-- ==========================================
+	local headerGamepass = Instance.new("TextLabel", pageVip)
+	headerGamepass.Size = UDim2.new(1, -20, 0, 20)
+	headerGamepass.Position = UDim2.new(0, 10, 0, 8)
+	headerGamepass.BackgroundTransparency = 1
+	headerGamepass.Text = "✨ FREE GAMEPASS MODULE"
+	headerGamepass.TextColor3 = Color3.fromRGB(240, 205, 80)
+	headerGamepass.Font = Enum.Font.GothamBold
+	headerGamepass.TextSize = 11
+	headerGamepass.TextXAlignment = Enum.TextXAlignment.Left
+
+	-- KARTU INFO OPERATOR VIP
 	local vipCard = Instance.new("Frame", pageVip)
-	vipCard.Size = UDim2.new(1, -20, 0, 75)
-	vipCard.Position = UDim2.new(0, 10, 0, 12)
+	vipCard.Size = UDim2.new(1, -20, 0, 65)
+	vipCard.Position = UDim2.new(0, 10, 0, 32)
 	vipCard.BackgroundColor3 = Color3.fromRGB(11, 11, 15)
 	Instance.new("UICorner", vipCard).CornerRadius = UDim.new(0, 8)
 	
@@ -141,8 +155,8 @@ if databaseVip[player.Name] then
 	Instance.new("UICorner", vipAccent).CornerRadius = UDim.new(1, 0)
 
 	local vipTitle = Instance.new("TextLabel", vipCard)
-	vipTitle.Size = UDim2.new(1, -25, 0, 22)
-	vipTitle.Position = UDim2.new(0, 20, 0, 10)
+	vipTitle.Size = UDim2.new(1, -25, 0, 20)
+	vipTitle.Position = UDim2.new(0, 20, 0, 8)
 	vipTitle.BackgroundTransparency = 1
 	vipTitle.Text = "VIP // OPERATOR ACCESS"
 	vipTitle.TextColor3 = Color3.fromRGB(240, 240, 250)
@@ -151,10 +165,10 @@ if databaseVip[player.Name] then
 	vipTitle.TextXAlignment = Enum.TextXAlignment.Left
 
 	local vipDesc = Instance.new("TextLabel", vipCard)
-	vipDesc.Size = UDim2.new(1, -25, 0, 30)
-	vipDesc.Position = UDim2.new(0, 20, 0, 32)
+	vipDesc.Size = UDim2.new(1, -25, 0, 26)
+	vipDesc.Position = UDim2.new(0, 20, 0, 28)
 	vipDesc.BackgroundTransparency = 1
-	vipDesc.Text = "Verified Operator: " .. player.Name .. " — All systems primed."
+	vipDesc.Text = "Verified: " .. player.Name .. " — All systems primed."
 	vipDesc.TextColor3 = Color3.fromRGB(150, 150, 165)
 	vipDesc.Font = Enum.Font.Gotham
 	vipDesc.TextSize = 10
@@ -163,7 +177,7 @@ if databaseVip[player.Name] then
 	-- FAST TAP HELPER
 	local fastTapRow = Instance.new("Frame", pageVip)
 	fastTapRow.Size = UDim2.new(1, -20, 0, 35)
-	fastTapRow.Position = UDim2.new(0, 10, 0, 98)
+	fastTapRow.Position = UDim2.new(0, 10, 0, 105)
 	fastTapRow.BackgroundTransparency = 1
 
 	local labelFastTap = Instance.new("TextLabel", fastTapRow)
@@ -211,7 +225,7 @@ if databaseVip[player.Name] then
 
 	local replayRow = Instance.new("Frame", pageVip)
 	replayRow.Size = UDim2.new(1, -20, 0, 160)
-	replayRow.Position = UDim2.new(0, 10, 0, 142)
+	replayRow.Position = UDim2.new(0, 10, 0, 145)
 	replayRow.BackgroundTransparency = 1
 
 	local replayLabel = Instance.new("TextLabel", replayRow)
@@ -347,7 +361,7 @@ if databaseVip[player.Name] then
 			
 			task.spawn(function()
 				local success = pcall(function()
-					loadstring(game:HttpGet("https://pastebin.com/raw/VVWcfs9t"))()
+				      loadstring(game:HttpGet("https://pastebin.com/raw/VVWcfs9t"))()
 				end)
 				
 				if success then
